@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "dgSpecHash": "0SBsHVbs/ZM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\games\\OneDrive\\Documentos\\Andromeda Studio\\Backend\\Andromeda.Api\\Andromeda.Api\\Andromeda.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\games\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.10\\microsoft.aspnetcore.openapi.10.0.10.nupkg.sha512",
+    "C:\\Users\\games\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\games\\.nuget\\packages\\scalar.aspnetcore\\2.16.17\\scalar.aspnetcore.2.16.17.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "El paquete \"Microsoft.OpenApi\" 2.0.0 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "projectPath": "C:\\Users\\games\\OneDrive\\Documentos\\Andromeda Studio\\Backend\\Andromeda.Api\\Andromeda.Api\\Andromeda.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\games\\OneDrive\\Documentos\\Andromeda Studio\\Backend\\Andromeda.Api\\Andromeda.Api\\Andromeda.Api.csproj",
+      "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}
