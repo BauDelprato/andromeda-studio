@@ -1,4 +1,4 @@
-namespace Andromeda.Api
+﻿namespace Andromeda.Api
 {
     public class WeatherForecast
     {

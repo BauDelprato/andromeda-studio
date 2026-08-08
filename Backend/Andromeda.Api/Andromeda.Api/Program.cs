@@ -1,10 +1,19 @@
+using Andromeda.Api.Data;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Agregar servicios al contenedor
 builder.Services.AddControllers();
-builder.Services.AddOpenApi(); // Esto usa el paquete que YA tenés instalado
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
+
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
@@ -12,7 +21,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(); // Interfaz profesional de pruebas
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();

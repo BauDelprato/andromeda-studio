@@ -11,10 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("a1aef9aa-2afb-4bfe-82f9-1cb18c106126")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Andromeda.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3cc7d9277948f51dc2badfc1891e4b2a0308c0c5")]
 [assembly: System.Reflection.AssemblyProductAttribute("Andromeda.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Andromeda.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
