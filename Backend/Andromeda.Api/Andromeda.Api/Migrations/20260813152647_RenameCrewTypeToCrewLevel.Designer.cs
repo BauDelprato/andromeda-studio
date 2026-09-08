@@ -3,6 +3,7 @@ using System;
 using Andromeda.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,83 +12,18 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Andromeda.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260813152647_RenameCrewTypeToCrewLevel")]
+    partial class RenameCrewTypeToCrewLevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Andromeda.Api.Models.Charge", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<int?>("BoxPackageId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("BoxSessionId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ClassPackageId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ClassSessionId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("CrewId")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("Month")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Charges");
-                });
-
-            modelBuilder.Entity("Andromeda.Api.Models.ChargePayment", b =>
-                {
-                    b.Property<int>("ChargeId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PaymentId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ChargeId", "PaymentId");
-
-                    b.HasIndex("PaymentId");
-
-                    b.ToTable("ChargePayments");
-                });
 
             modelBuilder.Entity("Andromeda.Api.Models.Crew", b =>
                 {
@@ -100,14 +36,11 @@ namespace Andromeda.Api.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Level")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Size")
+                    b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -126,8 +59,8 @@ namespace Andromeda.Api.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<int>("CrewId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
@@ -135,10 +68,20 @@ namespace Andromeda.Api.Migrations
                     b.Property<int>("Method")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Month")
+                        .HasColumnType("integer");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CrewId");
+
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Payments");
                 });
@@ -151,32 +94,11 @@ namespace Andromeda.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DNI")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("FitnessCertificate")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -197,9 +119,6 @@ namespace Andromeda.Api.Migrations
                     b.Property<int>("CrewId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.HasKey("StudentId", "CrewId");
 
                     b.HasIndex("CrewId");
@@ -207,23 +126,23 @@ namespace Andromeda.Api.Migrations
                     b.ToTable("StudentCrew");
                 });
 
-            modelBuilder.Entity("Andromeda.Api.Models.ChargePayment", b =>
+            modelBuilder.Entity("Andromeda.Api.Models.Payment", b =>
                 {
-                    b.HasOne("Andromeda.Api.Models.Charge", "Charge")
+                    b.HasOne("Andromeda.Api.Models.Crew", "Crew")
                         .WithMany()
-                        .HasForeignKey("ChargeId")
+                        .HasForeignKey("CrewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Andromeda.Api.Models.Payment", "Payment")
+                    b.HasOne("Andromeda.Api.Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("PaymentId")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Charge");
+                    b.Navigation("Crew");
 
-                    b.Navigation("Payment");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Andromeda.Api.Models.StudentCrew", b =>
