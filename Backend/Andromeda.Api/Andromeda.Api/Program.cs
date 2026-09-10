@@ -1,4 +1,5 @@
 using Andromeda.Api.Data;
+using Andromeda.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -12,6 +13,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
+
+// Registrar servicios de la aplicación
+builder.Services.AddScoped<StudentService>();
 
 builder.Services.AddOpenApi();
 
