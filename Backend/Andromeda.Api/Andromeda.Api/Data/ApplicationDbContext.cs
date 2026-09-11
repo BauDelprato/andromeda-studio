@@ -17,39 +17,41 @@ namespace Andromeda.Api.Data
         public DbSet<Charge> Charges { get; set; }
         public DbSet<ChargePayment> ChargePayments { get; set; }
 
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Aplica primero la configuración predeterminada de EF Core.
             base.OnModelCreating(modelBuilder);
 
-            //Indexación (unicidad) de DNI para estudiante
+            // DNI único por estudiante.
             modelBuilder.Entity<Student>()
                 .HasIndex(s => s.DNI)
                 .IsUnique();
 
-            // Clave compuesta de StudentCrew.
+            // Permite historial de inscripciones, pero solo una activa por estudiante y Crew.
             modelBuilder.Entity<StudentCrew>()
-                .HasKey(sc => new { sc.StudentId, sc.CrewId });
+                .HasIndex(sc => new { sc.StudentId, sc.CrewId })
+                .IsUnique();
 
             // Clave compuesta de ChargePayment.
             modelBuilder.Entity<ChargePayment>()
                 .HasKey(cp => new { cp.ChargeId, cp.PaymentId });
 
-            // Relación entre Payment y Student.
+            // Evita eliminar registros relacionados con información histórica o financiera.
             modelBuilder.Entity<Payment>()
                 .HasOne<Student>()
                 .WithMany()
                 .HasForeignKey(p => p.StudentId)
-
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relación entre Charge y Student.
             modelBuilder.Entity<Charge>()
-                .HasOne<Student>()
+                .HasOne(c => c.Student)
                 .WithMany()
                 .HasForeignKey(c => c.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Charge>()
+                .HasOne(c => c.StudentCrew)
+                .WithMany()
+                .HasForeignKey(c => c.StudentCrewId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
