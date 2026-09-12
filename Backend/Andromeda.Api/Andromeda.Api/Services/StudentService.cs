@@ -103,14 +103,73 @@ namespace Andromeda.Api.Services
                 student.Notes = request.Notes;
             }
 
-            if (request.IsActive.HasValue)
+            await _context.SaveChangesAsync();
+
+            return student;
+        }
+
+        public async Task<Student> CreateAsync(CreateStudentRequest request)
+        {
+            var dniExists = await _context.Students
+                .AnyAsync(s => s.DNI == request.DNI);
+
+            if (dniExists)
             {
-                student.IsActive = request.IsActive.Value;
+                throw new InvalidOperationException(
+                    "El DNI ya pertenece a otro estudiante.");
             }
+
+            var student = new Student
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                DNI = request.DNI,
+                Phone = request.Phone,
+                Email = request.Email,
+                FitnessCertificate = request.FitnessCertificate,
+                Notes = request.Notes,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Students.Add(student);
 
             await _context.SaveChangesAsync();
 
             return student;
         }
+
+        public async Task<Student?> DeactivateAsync(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+
+            if (student == null)
+            {
+                return null;
+            }
+
+            student.IsActive = false;
+
+            await _context.SaveChangesAsync();
+
+            return student;
+        }
+
+        public async Task<Student?> ActivateAsync(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+
+            if (student == null)
+            {
+                return null;
+            }
+
+            student.IsActive = true;
+
+            await _context.SaveChangesAsync();
+
+            return student;
+        }
+
     }
 }

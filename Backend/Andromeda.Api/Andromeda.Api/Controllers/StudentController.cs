@@ -74,5 +74,49 @@ namespace Andromeda.Api.Controllers
 
             return Ok(student);
         }
+
+        [HttpPatch("{id}/deactivate")]
+        public async Task<ActionResult<Student>> DeactivateStudent(int id)
+        {
+            var student = await _studentService.DeactivateAsync(id);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(student);
+        }
+
+        [HttpPatch("{id}/activate")]
+        public async Task<ActionResult<Student>> ActivateStudent(int id)
+        {
+            var student = await _studentService.ActivateAsync(id);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(student);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Student>> CreateStudent(CreateStudentRequest request)
+        {
+            try
+            {
+                var student = await _studentService.CreateAsync(request);
+
+                return CreatedAtAction(
+                    nameof(GetStudent),
+                    new { id = student.Id },
+                    student);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+        }
     }
 }
