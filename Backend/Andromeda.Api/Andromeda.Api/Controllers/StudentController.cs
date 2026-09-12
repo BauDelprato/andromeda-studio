@@ -16,6 +16,14 @@ namespace Andromeda.Api.Controllers
             _studentService = studentService;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Student>> CreateStudent([FromBody] CreateStudentRequest request)
+        {
+            var student = await _studentService.CreateAsync(request);
+
+            return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, student);
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {

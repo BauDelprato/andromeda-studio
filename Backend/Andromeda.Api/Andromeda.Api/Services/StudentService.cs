@@ -14,6 +14,36 @@ namespace Andromeda.Api.Services
             _context = context;
         }
 
+        public async Task<Student> CreateAsync(CreateStudentRequest request)
+        {
+            var dniExists = await _context.Students
+                .AnyAsync(s => s.DNI == request.DNI);
+
+            if (dniExists)
+            {
+                throw new InvalidOperationException("El DNI ya pertenece a otro estudiante.");
+            }
+
+            var student = new Student
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                DNI = request.DNI,
+                Phone = request.Phone,
+                Email = request.Email,
+                FitnessCertificate = request.FitnessCertificate ?? false,
+                Notes = request.Notes,
+                IsActive = request.IsActive,
+                //debería ir pero
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Students.Add(student);
+            await _context.SaveChangesAsync();
+
+            return student;
+        }
+
         public async Task<List<Student>> GetAllAsync()
         {
             return await _context.Students.ToListAsync();
