@@ -1,5 +1,4 @@
 ﻿using Andromeda.Api.DTOs.Students;
-using Andromeda.Api.Models;
 using Andromeda.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +16,7 @@ namespace Andromeda.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<StudentResponse>>> GetStudents()
         {
             var students = await _studentService.GetAllAsync();
 
@@ -25,7 +24,7 @@ namespace Andromeda.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public async Task<ActionResult<StudentResponse>> GetStudent(int id)
         {
             var student = await _studentService.GetByIdAsync(id);
 
@@ -38,7 +37,7 @@ namespace Andromeda.Api.Controllers
         }
 
         [HttpGet("dni/{dni}")]
-        public async Task<ActionResult<Student>> GetStudentByDni(string dni)
+        public async Task<ActionResult<StudentResponse>> GetStudentByDni(string dni)
         {
             var student = await _studentService.GetByDniAsync(dni);
 
@@ -51,7 +50,7 @@ namespace Andromeda.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<Student>>> SearchStudents(
+        public async Task<ActionResult<IEnumerable<StudentResponse>>> SearchStudents(
             string? name,
             string? lastName)
         {
@@ -61,22 +60,29 @@ namespace Andromeda.Api.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<Student>> UpdateStudent(
+        public async Task<ActionResult<StudentResponse>> UpdateStudent(
             int id,
             UpdateStudentRequest request)
         {
-            var student = await _studentService.UpdateAsync(id, request);
-
-            if (student == null)
+            try
             {
-                return NotFound();
-            }
+                var student = await _studentService.UpdateAsync(id, request);
 
-            return Ok(student);
+                if (student == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(student);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPatch("{id}/deactivate")]
-        public async Task<ActionResult<Student>> DeactivateStudent(int id)
+        public async Task<ActionResult<StudentResponse>> DeactivateStudent(int id)
         {
             var student = await _studentService.DeactivateAsync(id);
 
@@ -89,7 +95,7 @@ namespace Andromeda.Api.Controllers
         }
 
         [HttpPatch("{id}/activate")]
-        public async Task<ActionResult<Student>> ActivateStudent(int id)
+        public async Task<ActionResult<StudentResponse>> ActivateStudent(int id)
         {
             var student = await _studentService.ActivateAsync(id);
 
@@ -102,7 +108,8 @@ namespace Andromeda.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Student>> CreateStudent(CreateStudentRequest request)
+        public async Task<ActionResult<StudentResponse>> CreateStudent(
+            CreateStudentRequest request)
         {
             try
             {

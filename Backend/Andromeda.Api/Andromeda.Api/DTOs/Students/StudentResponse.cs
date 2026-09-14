@@ -1,25 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Andromeda.Api.DTOs.Students
+﻿namespace Andromeda.Api.DTOs.Students
 {
-    public class CreateStudentRequest
+    public class StudentResponse
     {
-        [Required]
+        public int Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
-
-        [Required]
         public string LastName { get; set; } = string.Empty;
-
-        [Required]
         public string DNI { get; set; } = string.Empty;
-
         public string Phone { get; set; } = string.Empty;
-
-        [EmailAddress]
         public string Email { get; set; } = string.Empty;
-
         public bool FitnessCertificate { get; set; }
-
         public string? Notes { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

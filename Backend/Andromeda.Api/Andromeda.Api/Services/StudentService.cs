@@ -14,23 +14,41 @@ namespace Andromeda.Api.Services
             _context = context;
         }
 
-        public async Task<List<Student>> GetAllAsync()
+        public async Task<List<StudentResponse>> GetAllAsync()
         {
-            return await _context.Students.ToListAsync();
+            var students = await _context.Students.ToListAsync();
+
+            return students
+                .Select(MapToResponse)
+                .ToList();
         }
 
-        public async Task<Student?> GetByIdAsync(int id)
+        public async Task<StudentResponse?> GetByIdAsync(int id)
         {
-            return await _context.Students.FindAsync(id);
+            var student = await _context.Students.FindAsync(id);
+
+            if (student == null)
+            {
+                return null;
+            }
+
+            return MapToResponse(student);
         }
 
-        public async Task<Student?> GetByDniAsync(string dni)
+        public async Task<StudentResponse?> GetByDniAsync(string dni)
         {
-            return await _context.Students
+            var student = await _context.Students
                 .FirstOrDefaultAsync(s => s.DNI == dni);
+
+            if (student == null)
+            {
+                return null;
+            }
+
+            return MapToResponse(student);
         }
 
-        public async Task<List<Student>> SearchAsync(
+        public async Task<List<StudentResponse>> SearchAsync(
             string? name,
             string? lastName)
         {
@@ -46,10 +64,14 @@ namespace Andromeda.Api.Services
                 query = query.Where(s => s.LastName.Contains(lastName));
             }
 
-            return await query.ToListAsync();
+            var students = await query.ToListAsync();
+
+            return students
+                .Select(MapToResponse)
+                .ToList();
         }
 
-        public async Task<Student?> UpdateAsync(
+        public async Task<StudentResponse?> UpdateAsync(
             int id,
             UpdateStudentRequest request)
         {
@@ -67,7 +89,8 @@ namespace Andromeda.Api.Services
 
                 if (dniExists)
                 {
-                    throw new InvalidOperationException("El DNI ya pertenece a otro estudiante.");
+                    throw new InvalidOperationException(
+                        "El DNI ya pertenece a otro estudiante.");
                 }
 
                 student.DNI = request.DNI;
@@ -95,7 +118,8 @@ namespace Andromeda.Api.Services
 
             if (request.FitnessCertificate.HasValue)
             {
-                student.FitnessCertificate = request.FitnessCertificate.Value;
+                student.FitnessCertificate =
+                    request.FitnessCertificate.Value;
             }
 
             if (request.Notes != null)
@@ -105,10 +129,11 @@ namespace Andromeda.Api.Services
 
             await _context.SaveChangesAsync();
 
-            return student;
+            return MapToResponse(student);
         }
 
-        public async Task<Student> CreateAsync(CreateStudentRequest request)
+        public async Task<StudentResponse> CreateAsync(
+            CreateStudentRequest request)
         {
             var dniExists = await _context.Students
                 .AnyAsync(s => s.DNI == request.DNI);
@@ -136,10 +161,10 @@ namespace Andromeda.Api.Services
 
             await _context.SaveChangesAsync();
 
-            return student;
+            return MapToResponse(student);
         }
 
-        public async Task<Student?> DeactivateAsync(int id)
+        public async Task<StudentResponse?> DeactivateAsync(int id)
         {
             var student = await _context.Students.FindAsync(id);
 
@@ -152,10 +177,10 @@ namespace Andromeda.Api.Services
 
             await _context.SaveChangesAsync();
 
-            return student;
+            return MapToResponse(student);
         }
 
-        public async Task<Student?> ActivateAsync(int id)
+        public async Task<StudentResponse?> ActivateAsync(int id)
         {
             var student = await _context.Students.FindAsync(id);
 
@@ -168,8 +193,24 @@ namespace Andromeda.Api.Services
 
             await _context.SaveChangesAsync();
 
-            return student;
+            return MapToResponse(student);
         }
 
+        private StudentResponse MapToResponse(Student student)
+        {
+            return new StudentResponse
+            {
+                Id = student.Id,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                DNI = student.DNI,
+                Phone = student.Phone,
+                Email = student.Email,
+                FitnessCertificate = student.FitnessCertificate,
+                Notes = student.Notes,
+                IsActive = student.IsActive,
+                CreatedAt = student.CreatedAt
+            };
+        }
     }
 }
