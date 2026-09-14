@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Registrar servicios de la aplicación
 builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<CrewService>();
 
 builder.Services.AddOpenApi();
 
