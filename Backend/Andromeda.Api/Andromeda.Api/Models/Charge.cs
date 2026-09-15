@@ -12,6 +12,9 @@
         public decimal Amount { get; set; }
         public decimal DiscountAmount { get; set; }
 
+        public int? PriceId { get; set; }
+        public Price? Price { get; set; }
+
         public DateOnly? BillingPeriod { get; set; }
 
         public ChargeStatus Status { get; set; }

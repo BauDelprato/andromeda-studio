@@ -16,6 +16,7 @@ namespace Andromeda.Api.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Charge> Charges { get; set; }
         public DbSet<ChargePayment> ChargePayments { get; set; }
+        public DbSet<Price> Prices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,7 +36,7 @@ namespace Andromeda.Api.Data
             modelBuilder.Entity<ChargePayment>()
                 .HasKey(cp => new { cp.ChargeId, cp.PaymentId });
 
-            // Evita eliminar registros relacionados con información histórica o financiera.
+            // Evita eliminar estudiantes que tengan información financiera asociada.
             modelBuilder.Entity<Payment>()
                 .HasOne<Student>()
                 .WithMany()
@@ -48,11 +49,35 @@ namespace Andromeda.Api.Data
                 .HasForeignKey(c => c.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Charge -> StudentCrew
+            // No se permite eliminar un StudentCrew si tiene cargos históricos asociados.
             modelBuilder.Entity<Charge>()
                 .HasOne(c => c.StudentCrew)
                 .WithMany()
                 .HasForeignKey(c => c.StudentCrewId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Charge -> Price
+            // Un Price puede estar asociado a muchos Charges.
+            // No se permite eliminar un Price que tenga cargos históricos asociados.
+            modelBuilder.Entity<Charge>()
+                .HasOne(c => c.Price)
+                .WithMany()
+                .HasForeignKey(c => c.PriceId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Configuración monetaria.
+            modelBuilder.Entity<Charge>()
+                .Property(c => c.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Charge>()
+                .Property(c => c.DiscountAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Price>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
         }
     }
 }
