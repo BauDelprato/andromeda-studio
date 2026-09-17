@@ -1,0 +1,76 @@
+using Andromeda.Api.Data;
+using Andromeda.Api.DTOs.StudentCrews;
+using Andromeda.Api.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace Andromeda.Api.Services
+{
+    public class StudentCrewService
+    {
+        private readonly ApplicationDbContext _context;
+
+        public StudentCrewService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+    
+    // GetAllAsync
+
+        public async Task<List<StudentCrewResponse>> GetAllAsync()
+        {
+            var  studentCrew = await _context.StudentCrew.ToListAsync();
+
+            return studentCrew
+                .Select(MapToResponse)
+                .ToList();
+
+        }
+
+        //CreteAsync
+        public async Task<StudentCrewResponse> CreateAsync(CreateStudentCrewRequest request)
+        {
+
+
+            if (await _context.StudentCrew.AnyAsync(sc => sc.StudentId == request.StudentId && sc.CrewId == request.CrewId))
+            {
+                throw new InvalidOperationException("The student is already assigned to this crew.");
+            }
+
+
+            var studentCrew = new StudentCrew
+            {
+                StudentId = request.StudentId,
+                CrewId = request.CrewId
+            };
+            _context.StudentCrew.Add(studentCrew);
+            await _context.SaveChangesAsync();
+
+            return MapToResponse(studentCrew);
+        }
+
+        public async Task DeleteAsync(int studentId, int crewId)
+        {
+            var studentCrew = await _context.StudentCrew
+                .FirstOrDefaultAsync(sc => sc.StudentId == studentId && sc.CrewId == crewId);
+
+            if (studentCrew == null)
+            {
+                throw new InvalidOperationException("The student is not assigned to this crew.");
+            }
+
+            _context.StudentCrew.Remove(studentCrew);
+            await _context.SaveChangesAsync();
+        }
+
+        private StudentCrewResponse MapToResponse(StudentCrew studentCrew)
+        {
+            return new StudentCrewResponse
+            {
+                Id = studentCrew.Id,
+                StudentId = studentCrew.StudentId,
+                CrewId = studentCrew.CrewId
+            };
+        }
+    }
+}
