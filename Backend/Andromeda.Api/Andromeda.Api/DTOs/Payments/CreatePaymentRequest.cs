@@ -6,10 +6,17 @@ namespace Andromeda.Api.DTOs.Payments
     {
         public int StudentId { get; set; }
 
-        public decimal Amount { get; set; }
-
         public DateTime Date { get; set; }
 
         public PaymentMethod Method { get; set; }
+
+        public List<CreatePaymentChargeRequest> Charges { get; set; } = [];
+    }
+
+    public class CreatePaymentChargeRequest
+    {
+        public int ChargeId { get; set; }
+
+        public decimal Amount { get; set; }
     }
 }
