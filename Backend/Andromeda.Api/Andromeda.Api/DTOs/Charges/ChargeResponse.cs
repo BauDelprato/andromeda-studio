@@ -23,5 +23,7 @@ namespace Andromeda.Api.DTOs.Charges
         public DateTime CreatedAt { get; set; }
 
         public int? StudentCrewId { get; set; }
+
+        public int? PriceId { get; set; }
     }
 }
