@@ -5,25 +5,30 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Agregar servicios al contenedor
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection")
+        builder.Configuration.GetConnectionString(
+            "DefaultConnection")
     )
 );
 
-// Registrar servicios de la aplicación
+// Services
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<CrewService>();
+builder.Services.AddScoped<StudentCrewService>();
+
+builder.Services.AddScoped<PriceService>();
 builder.Services.AddScoped<ChargeService>();
+builder.Services.AddScoped<ChargeGenerationService>();
+
+builder.Services.AddScoped<PaymentService>();
 
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configurar el pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -31,7 +36,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
