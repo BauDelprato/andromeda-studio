@@ -8,6 +8,8 @@ namespace Andromeda.Api.DTOs.Charges
 
         public ChargeType Type { get; set; }
 
+        public decimal Amount { get; set; }
+
         public decimal DiscountAmount { get; set; }
 
         public DateOnly? BillingPeriod { get; set; }
