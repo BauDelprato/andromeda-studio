@@ -8,14 +8,16 @@ namespace Andromeda.Api.Services
     public class StudentCrewService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ChargeGenerationService _chargeGenerationService;
 
-        public StudentCrewService(ApplicationDbContext context)
+        public StudentCrewService(ApplicationDbContext context, ChargeGenerationService chargeGenerationService)
         {
             _context = context;
+            _chargeGenerationService = chargeGenerationService;
         }
 
-    
-    // GetAllAsync
+
+        // GetAllAsync
 
         public async Task<List<StudentCrewResponse>> GetAllAsync()
         {
@@ -34,7 +36,7 @@ namespace Andromeda.Api.Services
 
             if (await _context.StudentCrew.AnyAsync(sc => sc.StudentId == request.StudentId && sc.CrewId == request.CrewId))
             {
-                throw new InvalidOperationException("The student is already assigned to this crew.");
+                throw new InvalidOperationException("Este estudiante ya fue asignado a esta crew.");
             }
 
 
@@ -43,8 +45,14 @@ namespace Andromeda.Api.Services
                 StudentId = request.StudentId,
                 CrewId = request.CrewId
             };
+
             _context.StudentCrew.Add(studentCrew);
             await _context.SaveChangesAsync();
+
+            await _chargeGenerationService.GenerateYearlyCrewChargesAsync(
+                studentCrew.StudentId,
+                studentCrew.CrewId,
+                studentCrew.Id);
 
             return MapToResponse(studentCrew);
         }
@@ -56,7 +64,7 @@ namespace Andromeda.Api.Services
 
             if (studentCrew == null)
             {
-                throw new InvalidOperationException("The student is not assigned to this crew.");
+                throw new InvalidOperationException("El estudiante no está asignado a esta crew.");
             }
 
             _context.StudentCrew.Remove(studentCrew);
