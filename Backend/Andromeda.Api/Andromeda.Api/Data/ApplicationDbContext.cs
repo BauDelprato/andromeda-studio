@@ -18,6 +18,8 @@ namespace Andromeda.Api.Data
         public DbSet<ChargePayment> ChargePayments { get; set; }
         public DbSet<Price> Prices { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
