@@ -6,7 +6,6 @@ import {
   LuCreditCard,
   LuChevronLeft,
   LuChevronRight,
-  LuSettings,
   LuLogOut,
   LuNotebookPen,
   LuUser,
