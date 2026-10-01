@@ -9,10 +9,14 @@ namespace Andromeda.Api.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly PaymentService _paymentService;
+        private readonly ChargePaymentService _chargePaymentService;
 
-        public PaymentController(PaymentService paymentService)
+        public PaymentController(
+            PaymentService paymentService,
+            ChargePaymentService chargePaymentService)
         {
             _paymentService = paymentService;
+            _chargePaymentService = chargePaymentService;
         }
 
         [HttpGet]
@@ -29,9 +33,30 @@ namespace Andromeda.Api.Controllers
         {
             try
             {
-                var payment = await _paymentService.CreateAsync(request);
+                var payment = await _chargePaymentService.CreateAsync(request);
 
                 return Created(string.Empty, payment);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UpdatePaymentResponse>> UpdatePayment(
+            int id,
+            UpdatePaymentRequest request)
+        {
+            try
+            {
+                var payment = await _paymentService.UpdateAsync(id, request);
+                if (payment == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(payment);
             }
             catch (InvalidOperationException ex)
             {

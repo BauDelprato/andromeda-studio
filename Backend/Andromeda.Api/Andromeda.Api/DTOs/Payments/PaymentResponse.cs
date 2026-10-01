@@ -14,6 +14,10 @@ namespace Andromeda.Api.DTOs.Payments
 
         public PaymentMethod Method { get; set; }
 
+        public string? Notes { get; set; }
+
+        public string? TransactionReference { get; set; }
+
         public DateTime CreatedAt { get; set; }
     }
 }

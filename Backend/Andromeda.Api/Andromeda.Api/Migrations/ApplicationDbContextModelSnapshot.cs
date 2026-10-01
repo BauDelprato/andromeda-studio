@@ -90,6 +90,10 @@ namespace Andromeda.Api.Migrations
                     b.Property<int>("PaymentId")
                         .HasColumnType("integer");
 
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
                     b.HasKey("ChargeId", "PaymentId");
 
                     b.HasIndex("PaymentId");
@@ -132,7 +136,8 @@ namespace Andromeda.Api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -142,6 +147,12 @@ namespace Andromeda.Api.Migrations
 
                     b.Property<int>("Method")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TransactionReference")
+                        .HasColumnType("text");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");

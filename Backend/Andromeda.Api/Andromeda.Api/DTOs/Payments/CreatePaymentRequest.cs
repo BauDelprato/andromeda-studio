@@ -1,4 +1,5 @@
 using Andromeda.Api.Models;
+using Andromeda.Api.DTOs.ChargePayment;
 
 namespace Andromeda.Api.DTOs.Payments
 {
@@ -11,5 +12,11 @@ namespace Andromeda.Api.DTOs.Payments
         public DateTime Date { get; set; }
 
         public PaymentMethod Method { get; set; }
+
+        public string? Notes { get; set; }
+
+        public string? TransactionReference { get; set; }
+
+        public List<CreateChargePaymentRequest> Charges { get; set; } = new();
     }
 }
