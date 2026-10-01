@@ -4,7 +4,6 @@ import { LuPlus, LuTriangleAlert, LuUsers } from "react-icons/lu";
 import { SearchBar } from "@/components/searchbar/Searchbar";
 import { StatCard } from "@/components/statcard/Statcard";
 import { Table } from "@/components/table/Table";
-import type { TableColumn } from "@/components/table/types";
 import type { Student } from "@/types/student/student";
 import { useStudents } from "@/hooks/useStudents";
 import styles from "./Students.module.css";

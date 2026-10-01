@@ -52,6 +52,8 @@ namespace Andromeda.Api.Services
                 Amount = request.Amount,
                 Date = request.Date,
                 Method = request.Method,
+                Notes = request.Notes,
+                TransactionReference = request.TransactionReference,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -60,6 +62,51 @@ namespace Andromeda.Api.Services
             await _context.SaveChangesAsync();
 
             return MapToResponse(payment);
+        }
+
+        public async Task<UpdatePaymentResponse?> UpdateAsync(
+            int id,
+            UpdatePaymentRequest request)
+        {
+            var payment = await _context.Payments.FindAsync(id);
+            if (payment == null)
+            {
+                return null;
+            }
+
+            if (request.Method.HasValue)
+            {
+                if (!Enum.IsDefined(request.Method.Value))
+                {
+                    throw new InvalidOperationException("El método de pago no es válido.");
+                }
+
+                payment.Method = request.Method.Value;
+            }
+
+            if (request.Notes != null)
+            {
+                payment.Notes = request.Notes;
+            }
+
+            if (request.TransactionReference != null)
+            {
+                payment.TransactionReference = request.TransactionReference;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new UpdatePaymentResponse
+            {
+                Id = payment.Id,
+                StudentId = payment.StudentId,
+                Amount = payment.Amount,
+                Date = payment.Date,
+                Method = payment.Method,
+                Notes = payment.Notes,
+                TransactionReference = payment.TransactionReference,
+                CreatedAt = payment.CreatedAt
+            };
         }
 
         private PaymentResponse MapToResponse(Payment payment)
@@ -71,6 +118,8 @@ namespace Andromeda.Api.Services
                 Amount = payment.Amount,
                 Date = payment.Date,
                 Method = payment.Method,
+                Notes = payment.Notes,
+                TransactionReference = payment.TransactionReference,
                 CreatedAt = payment.CreatedAt
             };
         }

@@ -7,5 +7,7 @@
 
         public int PaymentId { get; set; }
         public Payment Payment { get; set; } = null!;
+
+        public decimal Amount { get; set; }
     }
 }

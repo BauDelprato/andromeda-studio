@@ -45,7 +45,7 @@
 }
 
 .skeleton {
-  display: inline-block;
+  display: flex;
   width: 60px;
   height: 32px;
   border-radius: var(--radius-sm);

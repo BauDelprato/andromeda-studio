@@ -46,6 +46,14 @@ namespace Andromeda.Api.Controllers
             return Ok(charges);
         }
 
+        [HttpGet("student/{studentId}/pending")]
+        public async Task<ActionResult<IEnumerable<PendingChargeResponse>>> GetPendingChargesByStudent(
+            int studentId)
+        {
+            var charges = await _chargeService.GetPendingByStudentIdAsync(studentId);
+            return Ok(charges);
+        }
+
         [HttpPost]
         public async Task<ActionResult<ChargeResponse>> CreateCharge(
             CreateChargeRequest request)

@@ -6,7 +6,7 @@ import { StatCard } from "@/components/statcard/Statcard";
 import { Table } from "@/components/table/Table";
 import type { TableColumn } from "@/components/table/types";
 import { usePayments } from "@/hooks/usePayments";
-import { useStudents } from "@/hooks/useStudents";
+import { useStudents } from "@/hooks/student/useStudents";
 import type { Payment, PaymentMethod } from "@/types/payment/payment";
 import type { Student } from "@/types/student/student";
 import styles from "./Payments.module.css";
@@ -221,4 +221,3 @@ function Payments() {
 }
 
 export default Payments;
-

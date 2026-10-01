@@ -57,6 +57,39 @@ namespace Andromeda.Api.Services
                 .ToList();
         }
 
+        public async Task<List<PendingChargeResponse>> GetPendingByStudentIdAsync(
+            int studentId)
+        {
+            var charges = await _context.Charges
+                .AsNoTracking()
+                .Where(charge => charge.StudentId == studentId &&
+                    (charge.Status == ChargeStatus.Pending ||
+                     charge.Status == ChargeStatus.PartiallyPaid))
+                .OrderBy(charge => charge.CreatedAt)
+                .Select(charge => new
+                {
+                    Charge = charge,
+                    PaidAmount = _context.ChargePayments
+                        .Where(link => link.ChargeId == charge.Id)
+                        .Sum(link => (decimal?)link.Amount) ?? 0m
+                })
+                .ToListAsync();
+
+            return charges.Select(item => new PendingChargeResponse
+            {
+                Id = item.Charge.Id,
+                StudentId = item.Charge.StudentId,
+                Type = item.Charge.Type,
+                Amount = item.Charge.Amount,
+                DiscountAmount = item.Charge.DiscountAmount,
+                PaidAmount = item.PaidAmount,
+                AmountDue = item.Charge.Amount - item.Charge.DiscountAmount - item.PaidAmount,
+                BillingPeriod = item.Charge.BillingPeriod,
+                Status = item.Charge.Status,
+                CreatedAt = item.Charge.CreatedAt
+            }).ToList();
+        }
+
         public async Task<ChargeResponse> CreateAsync(
             CreateChargeRequest request)
         {
