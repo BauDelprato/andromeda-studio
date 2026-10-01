@@ -121,7 +121,7 @@ namespace Andromeda.Api.Services
             return MapToResponse(price);
         }
 
-        public async Task<Price?> GetActivePriceAsync(
+        public async Task<Price> GetActivePriceAsync(
             PriceType type,
             CrewLevel? crewLevel = null)
         {
