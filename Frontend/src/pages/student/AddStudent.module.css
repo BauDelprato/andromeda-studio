@@ -1,0 +1,267 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #ebe8ef;
+  border-radius: 20px;
+  padding: 36px 44px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #140d21;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+/* Grids */
+.gridThree {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.gridTwo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Fields */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #373142;
+}
+
+.labelIcon {
+  color: #685e75;
+  flex-shrink: 0;
+}
+
+.input {
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #e2dee8;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #140d21;
+  font-size: 13.5px;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #ba9bc9;
+  box-shadow: 0 0 0 3px rgba(99, 37, 126, 0.08);
+}
+
+.input::placeholder {
+  color: #a49dae;
+}
+
+/* Underline Fields */
+.underlineField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  width: fit-content;
+}
+
+.underlineInput {
+  border: none;
+  border-bottom: 1.5px solid #d5d1dc;
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+  font-size: 13px;
+  color: #140d21;
+  padding: 6px 0;
+  width: 180px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.underlineInput:focus {
+  border-bottom-color: var(--primary);
+}
+
+.underlineInput::placeholder {
+  color: #a49dae;
+}
+
+/* Inline Fields (Label + Control side by side) */
+.inlineField {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.inlineField .label {
+  white-space: nowrap;
+}
+
+/* Row with inline control on left and underline on right */
+.saludRow {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.competenciasRow {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+/* Textarea */
+.textarea {
+  width: 100%;
+  min-height: 85px;
+  padding: 12px 14px;
+  border: 1px solid #e2dee8;
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: #140d21;
+  font-size: 13.5px;
+  box-sizing: border-box;
+  resize: vertical;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.textarea:focus {
+  border-color: #ba9bc9;
+  box-shadow: 0 0 0 3px rgba(99, 37, 126, 0.08);
+}
+
+.textarea::placeholder {
+  color: #a49dae;
+  font-size: 13px;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.submitBtn {
+  background-color: #5c476c;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 12px 64px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.submitBtn:hover:not(:disabled) {
+  background-color: #4d385c;
+  transform: translateY(-1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Alerts / Messages */
+.errorAlert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+  font-size: 13px;
+}
+
+.successAlert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: #d1fae5;
+  border: 1px solid #6ee7b7;
+  color: #065f46;
+  font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .card {
+    padding: 24px 20px;
+  }
+
+  .gridThree {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gridTwo {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .saludRow,
+  .competenciasRow {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .gridThree,
+  .gridTwo {
+    grid-template-columns: 1fr;
+  }
+
+  .saludRow,
+  .competenciasRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .underlineField {
+    align-items: flex-start;
+  }
+
+  .submitBtn {
+    width: 100%;
+  }
+}
