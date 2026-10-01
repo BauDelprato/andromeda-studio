@@ -5,10 +5,12 @@ import type { Student } from "@/types/student/student";
 import { useStudentSearch } from "@/hooks/student/useStudentSearch";
 import { useStudents } from "@/hooks/student/useStudents";
 import { studentTableColumns } from "@/constants/studentTableColumns";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./Students.module.css";
 
 function Students() {
+const navigate = useNavigate();
 const {
 students,
 isLoading,
@@ -24,7 +26,7 @@ const {
 
 
 const handleSelectStudent = (student: Student) => {
-console.log("Alumno seleccionado:", student);
+  navigate(`/students/${student.id}`);
 };
 
 
