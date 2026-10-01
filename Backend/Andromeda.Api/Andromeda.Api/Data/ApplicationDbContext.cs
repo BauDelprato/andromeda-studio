@@ -38,6 +38,14 @@ namespace Andromeda.Api.Data
             modelBuilder.Entity<ChargePayment>()
                 .HasKey(cp => new { cp.ChargeId, cp.PaymentId });
 
+            modelBuilder.Entity<ChargePayment>()
+                .Property(cp => cp.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
+
             // Evita eliminar estudiantes que tengan información financiera asociada.
             modelBuilder.Entity<Payment>()
                 .HasOne<Student>()
