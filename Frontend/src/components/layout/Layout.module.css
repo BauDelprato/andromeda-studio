@@ -1,19 +1,31 @@
 .layout {
   min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  background-color: var(--bg-page);
+  overflow: hidden;
+  width: 100%;
+}
+
+.mainWrapper {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg);
+  min-width: 0;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-page);
 }
 
-.layout__body {
+.mainContent {
   flex: 1;
-  display: flex;
-  min-height: 0;
-}
-
-.layout__main {
-  flex: 1;
-  padding: 32px;
+  padding: 24px 36px 40px;
   overflow-y: auto;
   box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 16px;
+  }
 }

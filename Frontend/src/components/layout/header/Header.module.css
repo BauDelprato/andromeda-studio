@@ -1,17 +1,93 @@
 .header {
-  height: 64px;
+  height: 72px;
   display: flex;
   align-items: center;
-  padding: 0 24px;
-  border-bottom: 1px solid var(--border);
-  background-color: var(--bg);
+  justify-content: space-between;
+  padding: 16px 36px;
+  background-color: var(--bg-page);
   box-sizing: border-box;
 }
 
 .title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  color: var(--text-h);
+  color: var(--text-title);
   margin: 0;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #e8e5ec;
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  min-width: 200px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchWrapper:focus-within {
+  border-color: #baa4cb;
+  box-shadow: 0 0 0 3px rgba(99, 37, 126, 0.08);
+}
+
+.searchIcon {
+  color: #9a94a5;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13.5px;
+  color: var(--text-title);
+  width: 100%;
+}
+
+.searchInput::placeholder {
+  color: #a49dae;
+}
+
+.notificationBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  border: 1px solid #e8e5ec;
+  color: #5d5469;
+  transition: all 0.15s ease;
+}
+
+.notificationBtn:hover {
+  background-color: #f7f5fa;
+  color: var(--text-title);
+}
+
+.notificationDot {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #ef4444;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 16px;
+  }
 }
