@@ -1,0 +1,103 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.welcomeCard {
+  background: linear-gradient(135deg, #241337 0%, #170d24 100%);
+  border-radius: var(--radius-lg);
+  padding: 32px 36px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(26, 14, 39, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcomeContent {
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1;
+}
+
+.welcomeTitle {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.welcomeText {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #d1c7dc;
+  margin: 0;
+}
+
+.welcomeLogo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.statsRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.shortcutsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.shortcutCard {
+  background-color: #ffffff;
+  border: 1px solid #ebe8ef;
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  box-shadow: var(--shadow-card);
+}
+
+.shortcutCard:hover {
+  transform: translateY(-2px);
+  border-color: #baa2cc;
+  box-shadow: 0 6px 16px rgba(99, 37, 126, 0.08);
+}
+
+.shortcutIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background-color: #f3ecf7;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shortcutTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-title);
+  margin: 0;
+}
+
+.shortcutDesc {
+  font-size: 12.5px;
+  color: #7a7086;
+  margin: 0;
+}

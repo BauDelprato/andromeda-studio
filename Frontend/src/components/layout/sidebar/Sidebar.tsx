@@ -1,14 +1,13 @@
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
-  LuLayoutDashboard,
-  LuUsers,
-  LuCreditCard,
-  LuChevronLeft,
-  LuChevronRight,
-  LuLogOut,
-  LuNotebookPen,
+  LuHouse,
   LuUser,
+  LuNotebookPen,
+  LuLayers,
+  LuCreditCard,
+  LuWallet,
+  LuSettings,
+  LuLogOut,
 } from "react-icons/lu";
 import type { IconType } from "react-icons";
 import styles from "./Sidebar.module.css";
@@ -17,85 +16,75 @@ interface NavItem {
   label: string;
   path: string;
   icon: IconType;
-  badge?: string | number;
+  exact?: boolean;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Inicio", path: "/", icon: LuLayoutDashboard },
+  { label: "Inicio", path: "/", icon: LuHouse, exact: true },
   { label: "Alumnos", path: "/students", icon: LuUser },
-  { label: "Grupos", path: "/crews", icon: LuUsers },
-  { label: "Inscripciones", path: "/registrations", icon: LuNotebookPen },
+  { label: "Inscripciones", path: "/enrollments", icon: LuNotebookPen },
+  { label: "Clases", path: "/crews", icon: LuLayers },
   { label: "Pagos", path: "/payments", icon: LuCreditCard },
-  
+  { label: "Caja", path: "/cash", icon: LuWallet },
+  { label: "Sistema", path: "/system", icon: LuSettings },
 ];
 
 function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const toggleCollapse = () => {
-    setIsCollapsed((prev) => !prev);
-  };
-
   return (
-    <aside
-      className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ""}`}
-      aria-label="Navegación principal"
-    >
-      {/* Botón de toggle colapsar/expandir */}
-      <div className={styles.toggleWrapper}>
-        <button
-          type="button"
-          onClick={toggleCollapse}
-          className={styles.toggleBtn}
-          aria-label={isCollapsed ? "Expandir menú" : "Colapsar menú"}
-          title={isCollapsed ? "Expandir menú" : "Colapsar menú"}
-        >
-          {isCollapsed ? <LuChevronRight size={18} /> : <LuChevronLeft size={18} />}
-        </button>
+    <aside className={styles.sidebar} aria-label="Navegación principal">
+      {/* Logo Header */}
+      <div className={styles.logoSection}>
+        <img
+          src="/logo.png"
+          alt="Andromeda Dance School Logo"
+          className={styles.logoImg}
+        />
+        <div className={styles.brandText}>
+          <span className={styles.brandTitle}>ANDROMEDA</span>
+          <span className={styles.brandSubtitle}>DANCE SCHOOL</span>
+        </div>
       </div>
 
       {/* Navegación central */}
       <nav className={styles.nav}>
         <ul className={styles.navList}>
-          {NAV_ITEMS.map(({ label, path, icon: Icon, badge }) => (
-            <li key={path} className={styles.navItem}>
+          {NAV_ITEMS.map(({ label, path, icon: Icon, exact }) => (
+            <li key={label} className={styles.navItem}>
               <NavLink
                 to={path}
+                end={exact}
                 className={({ isActive }) =>
                   `${styles.navLink} ${isActive ? styles.active : ""}`
                 }
-                title={isCollapsed ? label : undefined}
               >
                 <span className={styles.iconWrapper}>
-                  <Icon size={20} />
+                  <Icon size={19} />
                 </span>
-                {!isCollapsed && <span className={styles.linkLabel}>{label}</span>}
-                {!isCollapsed && badge && (
-                  <span className={styles.badge}>{badge}</span>
-                )}
+                <span className={styles.linkLabel}>{label}</span>
               </NavLink>
             </li>
           ))}
         </ul>
       </nav>
 
-      {/* Footer / Opciones secundarias */}
+      {/* Footer: User profile & Cerrar sesión */}
       <div className={styles.footer}>
-        <ul className={styles.navList}>
-          <li className={styles.navItem}>
-            <button
-              type="button"
-              className={`${styles.navLink} ${styles.logoutBtn}`}
-              onClick={() => console.log("Cerrar sesión")}
-              title={isCollapsed ? "Cerrar sesión" : undefined}
-            >
-              <span className={styles.iconWrapper}>
-                <LuLogOut size={20} />
-              </span>
-              {!isCollapsed && <span className={styles.linkLabel}>Salir</span>}
-            </button>
-          </li>
-        </ul>
+        <div className={styles.userProfile}>
+          <div className={styles.userAvatar}>JF</div>
+          <div className={styles.userInfo}>
+            <span className={styles.userName}>Jere Farias</span>
+            <span className={styles.userRole}>Administrador</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className={styles.logoutBtn}
+          onClick={() => console.log("Cerrar sesión")}
+        >
+          <LuLogOut size={18} className={styles.logoutIcon} />
+          <span>Cerrar sesión</span>
+        </button>
       </div>
     </aside>
   );

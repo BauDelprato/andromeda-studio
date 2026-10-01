@@ -1,8 +1,6 @@
 import styles from "./Table.module.css"
 import type { TableProps } from "./types"
 
-const DEFAULT_MIN_ROWS = 8
-
 export function Table<T>({
   data,
   columns,
@@ -11,7 +9,7 @@ export function Table<T>({
   emptyMessage = "No hay datos para mostrar.",
   onRetry,
   onRowClick,
-  minRows = DEFAULT_MIN_ROWS,
+  minRows = 0,
 }: TableProps<T>) {
   const emptyRows = Math.max(0, minRows - data.length)
 
@@ -31,7 +29,7 @@ export function Table<T>({
       </div>
 
       <div className={styles.body}>
-        {isLoading && <SkeletonRows columnsCount={columns.length} minRows={minRows} />}
+        {isLoading && <SkeletonRows columnsCount={columns.length} minRows={minRows || 4} />}
 
         {!isLoading && error && (
           <div className={styles.stateRow}>
@@ -99,6 +97,7 @@ export function Table<T>({
 
         {!isLoading &&
           !error &&
+          minRows > 0 &&
           data.length > 0 &&
           Array.from({ length: emptyRows }).map((_, index) => (
             <div
@@ -126,7 +125,7 @@ function SkeletonRows({ columnsCount, minRows }: SkeletonRowsProps) {
       {Array.from({ length: minRows }).map((_, rowIndex) => (
         <div
           key={`skeleton-${rowIndex}`}
-          className={styles.emptyRow}
+          className={styles.skeletonRow}
           style={{
             gridTemplateColumns: `repeat(${columnsCount}, 1fr)`,
           }}
