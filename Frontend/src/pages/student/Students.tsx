@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { LuPlus, LuTriangleAlert, LuUsers } from "react-icons/lu";
 import { SearchBar } from "@/components/searchbar/Searchbar";
 import { StatCard } from "@/components/statcard/Statcard";
@@ -92,14 +93,13 @@ function Students() {
           icon={<LuUsers size={22} />}
         />
 
-        <button
-          type="button"
+        <Link
+          to="/students/new"
           className={styles.addButton}
-          onClick={() => console.log("Añadir alumno")}
         >
           <LuPlus size={18} />
           <span>Añadir alumno</span>
-        </button>
+        </Link>
       </div>
 
       {/* Alert Banner for pending fitness certificate */}
