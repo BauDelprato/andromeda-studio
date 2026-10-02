@@ -1,0 +1,31 @@
+.field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.label {
+  color: #35313a;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.input {
+  width: 100%;
+  height: 34px;
+  padding: 6px 10px;
+  border: 1px solid #dedce1;
+  border-radius: 5px;
+  background: #fff;
+  color: #28242d;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.input:focus {
+  border-color: #8b78a1;
+  box-shadow: 0 0 0 3px rgb(107 91 149 / 12%);
+}
