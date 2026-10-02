@@ -1,55 +1,67 @@
 .row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+display: flex;
+align-items: center;
+gap: 16px;
+width: 100%;
 }
 
 .searchField {
-  display: flex;
-  align-items: center;
-  background-color: #ffffff;
-  border: 1px solid #e5e2ea;
-  border-radius: 8px;
-  padding: 6px 12px;
-  gap: 8px;
-  min-width: 220px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.searchField:focus-within {
-  border-color: #ba9bc9;
-  box-shadow: 0 0 0 3px rgba(99, 37, 126, 0.08);
-}
-
-.searchIcon {
-  color: #9d96a7;
-  flex-shrink: 0;
+display: flex;
+align-items: center;
+flex: 1;
+min-width: 0;
+background-color: var(--color-surface);
+border: 1px solid var(--color-border);
+border-radius: var(--radius-pill);
+padding: 4px 8px 4px 20px;
+box-shadow: var(--shadow-sm);
 }
 
 .input {
-  flex: 1;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 13px;
-  color: var(--text-title);
-  padding: 2px 0;
+flex: 1;
+min-width: 0;
+border: none;
+outline: none;
+background: transparent;
+font-size: 15px;
+color: var(--color-text);
+padding: 10px 0;
 }
 
 .input::placeholder {
-  color: #a49dae;
+color: var(--color-text-soft);
+}
+
+.searchButton {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+width: 36px;
+height: 36px;
+border: none;
+border-radius: var(--radius-pill);
+background: transparent;
+color: var(--color-text-muted);
+transition: background-color 0.15s ease;
+}
+
+.searchButton:hover {
+background-color: var(--color-page);
 }
 
 .select {
-  padding: 6px 12px;
-  border: 1px solid #e5e2ea;
-  border-radius: 8px;
-  background-color: #ffffff;
-  color: var(--text-title);
-  font-size: 13px;
-  cursor: pointer;
+min-width: 130px;
+padding: 12px 16px;
+border: 1px solid var(--color-border);
+border-radius: var(--radius-md);
+background-color: var(--color-surface);
+color: var(--color-text);
+font-size: 14px;
+box-shadow: var(--shadow-sm);
+cursor: pointer;
 }
 
 .select:focus {
-  outline: 2px solid rgba(99, 37, 126, 0.2);
+outline: 2px solid var(--color-primary-soft);
+outline-offset: 1px;
 }

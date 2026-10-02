@@ -1,4 +1,6 @@
-import { LuSearch as Search } from "react-icons/lu";
+import {
+  LuSearch as Search
+} from "react-icons/lu";
 import styles from "./Searchbar.module.css";
 
 export interface SearchOption<T extends string> {
@@ -35,7 +37,6 @@ export function SearchBar<T extends string>({
         }}
         role="search"
       >
-        <Search size={16} className={styles.searchIcon} />
         <input
           type="text"
           className={styles.input}
@@ -44,6 +45,14 @@ export function SearchBar<T extends string>({
           onChange={(e) => onChange(e.target.value)}
           aria-label={placeholder}
         />
+
+        <button
+          type="submit"
+          className={styles.searchButton}
+          aria-label="Buscar"
+        >
+          <Search size={18} strokeWidth={2} />
+        </button>
       </form>
 
       {sortOptions.length > 0 && onSortChange && (

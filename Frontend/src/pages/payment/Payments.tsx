@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { LuCreditCard } from "react-icons/lu";
 import { createPayment } from "@/api/paymentApi";
 import { SearchBar } from "@/components/searchbar/Searchbar";
 import { StatCard } from "@/components/statcard/Statcard";
@@ -125,16 +124,15 @@ function Payments() {
   return (
     <section className={styles.page}>
       <header className={styles.heading}>
-        <StatCard
-          label="Pagos registrados"
-          value={payments.length}
-          isLoading={isLoading}
-          icon={<LuCreditCard size={22} />}
-        />
+        <div>
+          <h2>Control de Pagos</h2>
+          <p>Historial y registro de mensualidades y pagos de alumnos.</p>
+        </div>
+        <StatCard label="Pagos registrados" value={payments.length} isLoading={isLoading} />
       </header>
 
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h3 className={styles.formTitle}>Registrar pago</h3>
+        <h3>Registrar pago</h3>
         <div className={styles.fields}>
           <label className={styles.field}>
             <span>Alumno</span>
@@ -201,21 +199,19 @@ function Payments() {
         </div>
       </form>
 
-      <div className={styles.tableCard}>
-        <div className={styles.tableCardHeader}>
-          <h3 className={styles.tableCardTitle}>Pagos recientes</h3>
-          <SearchBar value={search} onChange={setSearch} placeholder="Buscar por alumno o medio..." />
-        </div>
-
-        <Table<Payment>
-          data={filteredPayments}
-          columns={paymentColumns}
-          isLoading={isLoading}
-          error={error}
-          onRetry={reload}
-          emptyMessage={search ? "No se encontraron pagos." : "No hay pagos para mostrar."}
-        />
+      <div className={styles.listHeading}>
+        <h3>Pagos recientes</h3>
+        <SearchBar value={search} onChange={setSearch} placeholder="Buscar por alumno o medio" />
       </div>
+
+      <Table<Payment>
+        data={filteredPayments}
+        columns={paymentColumns}
+        isLoading={isLoading}
+        error={error}
+        onRetry={reload}
+        emptyMessage={search ? "No se encontraron pagos." : "No hay pagos para mostrar."}
+      />
     </section>
   );
 }
