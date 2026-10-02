@@ -90,6 +90,10 @@ namespace Andromeda.Api.Migrations
                     b.Property<int>("PaymentId")
                         .HasColumnType("integer");
 
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
                     b.HasKey("ChargeId", "PaymentId");
 
                     b.HasIndex("PaymentId");
@@ -132,7 +136,8 @@ namespace Andromeda.Api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -142,6 +147,12 @@ namespace Andromeda.Api.Migrations
 
                     b.Property<int>("Method")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TransactionReference")
+                        .HasColumnType("text");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
@@ -255,6 +266,41 @@ namespace Andromeda.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("StudentCrew");
+                });
+
+            modelBuilder.Entity("Andromeda.Api.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Andromeda.Api.Models.Charge", b =>

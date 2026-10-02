@@ -18,6 +18,8 @@ namespace Andromeda.Api.Data
         public DbSet<ChargePayment> ChargePayments { get; set; }
         public DbSet<Price> Prices { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -35,6 +37,14 @@ namespace Andromeda.Api.Data
             // Clave compuesta de ChargePayment.
             modelBuilder.Entity<ChargePayment>()
                 .HasKey(cp => new { cp.ChargeId, cp.PaymentId });
+
+            modelBuilder.Entity<ChargePayment>()
+                .Property(cp => cp.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
 
             // Evita eliminar estudiantes que tengan información financiera asociada.
             modelBuilder.Entity<Payment>()

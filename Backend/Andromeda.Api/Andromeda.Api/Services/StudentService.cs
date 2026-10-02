@@ -8,15 +8,21 @@ namespace Andromeda.Api.Services
     public class StudentService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ChargeGenerationService _chargeGenerationService;
 
-        public StudentService(ApplicationDbContext context)
+        public StudentService(
+            ApplicationDbContext context,
+            ChargeGenerationService chargeGenerationService)
         {
             _context = context;
+            _chargeGenerationService = chargeGenerationService;
         }
 
         public async Task<List<StudentResponse>> GetAllAsync()
         {
-            var students = await _context.Students.ToListAsync();
+            var students = await _context.Students
+                .AsNoTracking()
+                .ToListAsync();
 
             return students
                 .Select(MapToResponse)
@@ -25,7 +31,9 @@ namespace Andromeda.Api.Services
 
         public async Task<StudentResponse?> GetByIdAsync(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var student = await _context.Students
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.Id == id);
 
             if (student == null)
             {
@@ -38,6 +46,7 @@ namespace Andromeda.Api.Services
         public async Task<StudentResponse?> GetByDniAsync(string dni)
         {
             var student = await _context.Students
+                .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.DNI == dni);
 
             if (student == null)
@@ -52,16 +61,20 @@ namespace Andromeda.Api.Services
             string? name,
             string? lastName)
         {
-            var query = _context.Students.AsQueryable();
+            var query = _context.Students
+                .AsNoTracking()
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(name))
             {
-                query = query.Where(s => s.FirstName.Contains(name));
+                query = query.Where(
+                    s => s.FirstName.Contains(name));
             }
 
             if (!string.IsNullOrWhiteSpace(lastName))
             {
-                query = query.Where(s => s.LastName.Contains(lastName));
+                query = query.Where(
+                    s => s.LastName.Contains(lastName));
             }
 
             var students = await query.ToListAsync();
@@ -85,7 +98,9 @@ namespace Andromeda.Api.Services
             if (request.DNI != null)
             {
                 var dniExists = await _context.Students
-                    .AnyAsync(s => s.DNI == request.DNI && s.Id != id);
+                    .AnyAsync(s =>
+                        s.DNI == request.DNI &&
+                        s.Id != id);
 
                 if (dniExists)
                 {
@@ -160,6 +175,16 @@ namespace Andromeda.Api.Services
             _context.Students.Add(student);
 
             await _context.SaveChangesAsync();
+
+            var billingPeriod = new DateOnly(
+                DateTime.UtcNow.Year,
+                1,
+                1);
+
+            await _chargeGenerationService
+                .GenerateRegistrationChargeAsync(
+                    student.Id,
+                    billingPeriod);
 
             return MapToResponse(student);
         }

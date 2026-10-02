@@ -1,0 +1,124 @@
+.table {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.header,
+.dataRow,
+.emptyRow {
+  display: grid;
+  align-items: center;
+  gap: 16px;
+  padding: 0 28px;
+  min-height: 56px;
+}
+
+.header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header span {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.dataRow {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  transition: background-color 0.12s ease;
+}
+
+button.dataRow {
+  cursor: pointer;
+}
+
+.dataRow:hover {
+  background-color: var(--color-page);
+}
+
+.emptyRow {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stateRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  min-height: 200px;
+}
+
+.emptyText {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 15px;
+}
+
+.errorText {
+  margin: 0;
+  color: #c0504d;
+  font-size: 15px;
+}
+
+.retryButton {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  padding: 8px 18px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  background-color: var(--color-page);
+}
+
+/* Skeleton */
+
+.skeletonBlock {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.skeletonText {
+  display: block;
+  width: 70%;
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    #eceef1,
+    #f6f7f8,
+    #eceef1
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

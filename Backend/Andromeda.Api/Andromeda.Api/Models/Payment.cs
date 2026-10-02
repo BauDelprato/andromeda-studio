@@ -8,6 +8,8 @@
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
         public PaymentMethod Method { get; set; }
+        public string? Notes { get; set; }
+        public string? TransactionReference { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
     public enum PaymentMethod

@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import FormInput from "./components/FormInput";
+import { useNavigate } from "react-router-dom";
 import ToggleGroup from "./components/ToggleGroup";
 import type { StudentFormData } from "./studentFormTypes";
 import styles from "./AddStudentPage.module.css";
@@ -14,6 +15,7 @@ const emptyForm: StudentFormData = {
 
 export default function AddStudentPage() {
   const [form, setForm] = useState<StudentFormData>(emptyForm);
+  const navigate = useNavigate();
   const { submitStudent, isLoading, error, success } = useCreateStudent();
 
   const updateField = <K extends keyof StudentFormData>(field: K, value: StudentFormData[K]) => {
@@ -30,6 +32,7 @@ export default function AddStudentPage() {
         alert("Por favor completa Nombre, DNI y Correo.");
         return;
     }
+    
     await submitStudent(form);
   };
 

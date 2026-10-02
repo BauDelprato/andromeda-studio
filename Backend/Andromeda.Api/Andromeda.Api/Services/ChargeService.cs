@@ -8,10 +8,14 @@ namespace Andromeda.Api.Services
     public class ChargeService
     {
         private readonly ApplicationDbContext _context;
+        private readonly PriceService _priceService;
 
-        public ChargeService(ApplicationDbContext context)
+        public ChargeService(
+            ApplicationDbContext context,
+            PriceService priceService)
         {
             _context = context;
+            _priceService = priceService;
         }
 
         public async Task<List<ChargeResponse>> GetAllAsync()
@@ -45,11 +49,45 @@ namespace Andromeda.Api.Services
             var charges = await _context.Charges
                 .AsNoTracking()
                 .Where(c => c.StudentId == studentId)
+                .OrderByDescending(c => c.CreatedAt)
                 .ToListAsync();
 
             return charges
                 .Select(MapToResponse)
                 .ToList();
+        }
+
+        public async Task<List<PendingChargeResponse>> GetPendingByStudentIdAsync(
+            int studentId)
+        {
+            var charges = await _context.Charges
+                .AsNoTracking()
+                .Where(charge => charge.StudentId == studentId &&
+                    (charge.Status == ChargeStatus.Pending ||
+                     charge.Status == ChargeStatus.PartiallyPaid))
+                .OrderBy(charge => charge.CreatedAt)
+                .Select(charge => new
+                {
+                    Charge = charge,
+                    PaidAmount = _context.ChargePayments
+                        .Where(link => link.ChargeId == charge.Id)
+                        .Sum(link => (decimal?)link.Amount) ?? 0m
+                })
+                .ToListAsync();
+
+            return charges.Select(item => new PendingChargeResponse
+            {
+                Id = item.Charge.Id,
+                StudentId = item.Charge.StudentId,
+                Type = item.Charge.Type,
+                Amount = item.Charge.Amount,
+                DiscountAmount = item.Charge.DiscountAmount,
+                PaidAmount = item.PaidAmount,
+                AmountDue = item.Charge.Amount - item.Charge.DiscountAmount - item.PaidAmount,
+                BillingPeriod = item.Charge.BillingPeriod,
+                Status = item.Charge.Status,
+                CreatedAt = item.Charge.CreatedAt
+            }).ToList();
         }
 
         public async Task<ChargeResponse> CreateAsync(
@@ -66,9 +104,12 @@ namespace Andromeda.Api.Services
                     "El estudiante no existe.");
             }
 
+            StudentCrew? studentCrew = null;
+
             if (request.StudentCrewId.HasValue)
             {
-                var studentCrew = await _context.StudentCrew
+                studentCrew = await _context.StudentCrew
+                    .Include(sc => sc.Crew)
                     .FirstOrDefaultAsync(sc =>
                         sc.Id == request.StudentCrewId.Value);
 
@@ -85,13 +126,29 @@ namespace Andromeda.Api.Services
                 }
             }
 
+            var price = await ResolvePriceAsync(
+                request.Type,
+                studentCrew);
+
+            var billingPeriod = request.BillingPeriod;
+
+            if (!billingPeriod.HasValue)
+            {
+                billingPeriod = GetDefaultBillingPeriod(request.Type);
+            }
+
+            ValidateAmounts(
+                price.Amount,
+                request.DiscountAmount);
+
             var charge = new Charge
             {
                 StudentId = request.StudentId,
                 Type = request.Type,
-                Amount = request.Amount,
+                Amount = price.Amount,
                 DiscountAmount = request.DiscountAmount,
-                BillingPeriod = request.BillingPeriod,
+                PriceId = price.Id,
+                BillingPeriod = billingPeriod,
                 Status = ChargeStatus.Pending,
                 CreatedAt = DateTime.UtcNow,
                 StudentCrewId = request.StudentCrewId
@@ -117,11 +174,23 @@ namespace Andromeda.Api.Services
 
             if (request.Amount.HasValue)
             {
+                if (request.Amount.Value < 0)
+                {
+                    throw new InvalidOperationException(
+                        "El amount no puede ser negativo.");
+                }
+
                 charge.Amount = request.Amount.Value;
             }
 
             if (request.DiscountAmount.HasValue)
             {
+                if (request.DiscountAmount.Value < 0)
+                {
+                    throw new InvalidOperationException(
+                        "El discount amount no puede ser negativo.");
+                }
+
                 charge.DiscountAmount = request.DiscountAmount.Value;
             }
 
@@ -144,24 +213,74 @@ namespace Andromeda.Api.Services
             return MapToResponse(charge);
         }
 
+        private async Task<Price> ResolvePriceAsync(
+            ChargeType chargeType,
+            StudentCrew? studentCrew)
+        {
+            switch (chargeType)
+            {
+                case ChargeType.Registration:
+                    return await _priceService.GetActivePriceAsync(
+                        PriceType.Registration);
+
+                case ChargeType.Crew:
+                    if (studentCrew == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Un cargo de Crew requiere StudentCrewId.");
+                    }
+
+                    return await _priceService.GetActivePriceAsync(
+                        PriceType.Crew,
+                        studentCrew.Crew.Level);
+
+                case ChargeType.ClassSession:
+                    throw new InvalidOperationException(
+                        "ClassSession todavía no está implementado.");
+
+                case ChargeType.ClassPackage:
+                    throw new InvalidOperationException(
+                        "ClassPackage todavía no está implementado.");
+
+                case ChargeType.BoxSession:
+                    throw new InvalidOperationException(
+                        "BoxSession todavía no está implementado.");
+
+                case ChargeType.BoxPackage:
+                    throw new InvalidOperationException(
+                        "BoxPackage todavía no está implementado.");
+
+                default:
+                    throw new InvalidOperationException(
+                        "Tipo de Charge no válido.");
+            }
+        }
+
+        private DateOnly GetDefaultBillingPeriod(
+            ChargeType chargeType)
+        {
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            return chargeType switch
+            {
+                ChargeType.Registration =>
+                    new DateOnly(today.Year, 1, 1),
+
+                ChargeType.Crew =>
+                    new DateOnly(today.Year, today.Month, 1),
+
+                _ => today
+            };
+        }
+
         private void ValidateChargeRequest(
             CreateChargeRequest request)
         {
-            if (request.Amount < 0)
-            {
-                throw new InvalidOperationException(
-                    "El amount no puede ser negativo.");
-            }
-
             if (request.DiscountAmount < 0)
             {
                 throw new InvalidOperationException(
                     "El discount amount no puede ser negativo.");
             }
-
-            ValidateAmounts(
-                request.Amount,
-                request.DiscountAmount);
 
             if (request.Type == ChargeType.Crew &&
                 !request.StudentCrewId.HasValue)
@@ -202,7 +321,8 @@ namespace Andromeda.Api.Services
                 BillingPeriod = charge.BillingPeriod,
                 Status = charge.Status,
                 CreatedAt = charge.CreatedAt,
-                StudentCrewId = charge.StudentCrewId
+                StudentCrewId = charge.StudentCrewId,
+                PriceId = charge.PriceId
             };
         }
     }
