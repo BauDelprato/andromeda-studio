@@ -1,135 +1,54 @@
-.container {
+.screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-page);
+}
+
+.content {
+  flex: 1;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.topBar {
+.topRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
+  width: 100%;
 }
 
 .addButton {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background-color: var(--primary);
-  color: #ffffff;
+  padding: 12px 18px;
   border: none;
-  border-radius: 10px;
-  padding: 10px 18px;
-  font-size: 13.5px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.15s ease, transform 0.1s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
 }
 
 .addButton:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--color-primary-hover);
 }
 
-.alert {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background-color: var(--status-danger-bg);
-  border: 1px solid var(--status-danger-border);
-  border-radius: 12px;
-  padding: 12px 18px;
-  color: var(--status-danger-text);
-  font-size: 13.5px;
-  line-height: 1.4;
-}
+@media (max-width: 600px) {
+  .content {
+    padding: 20px 16px 40px;
+  }
 
-.alertIcon {
-  color: #ef4444;
-  flex-shrink: 0;
-}
-
-.tableCard {
-  background-color: #ffffff;
-  border: 1px solid #ebe8ef;
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: var(--shadow-card);
-}
-
-.tableCardHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.tableCardTitle {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-title);
-  margin: 0;
-}
-
-.studentCell {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.studentAvatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #ede6f4;
-  color: #5a2574;
-  font-weight: 600;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.studentName {
-  font-weight: 500;
-  color: var(--text-title);
-}
-
-.badgeActive {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 12px;
-  border-radius: 9999px;
-  background-color: var(--status-active-bg);
-  color: var(--status-active-text);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.badgePending {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 12px;
-  border-radius: 9999px;
-  background-color: var(--status-pending-bg);
-  color: var(--status-pending-text);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.badgeInactive {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 12px;
-  border-radius: 9999px;
-  background-color: #f3f4f6;
-  color: #6b7280;
-  font-size: 12px;
-  font-weight: 600;
+  .topRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

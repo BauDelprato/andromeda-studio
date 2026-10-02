@@ -9,8 +9,8 @@ export interface TableColumn<T> {
 export interface TableProps<T> {
   data: T[]
   columns: TableColumn<T>[]
-  isLoading?: boolean
-  error?: string | null
+  isLoading: boolean
+  error: string | null
   emptyMessage?: string
   onRetry?: () => void
   onRowClick?: (item: T) => void
