@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { apiFetch } from "../../api/client"; // Reutilizamos la configuración centralizada de tu equipo
+import { createStudent } from "../../api/studentApi";
 import type { StudentFormData } from "../../types/student/studentFormTypes";
 
 export function useCreateStudent() {
@@ -13,10 +13,7 @@ export function useCreateStudent() {
     setSuccess(false);
 
     try {
-      await apiFetch("/api/Students", {
-        method: "POST",
-        body: JSON.stringify(studentData),
-      });
+      await createStudent(studentData);
       setSuccess(true);
       return true;
     } catch (err: any) {
