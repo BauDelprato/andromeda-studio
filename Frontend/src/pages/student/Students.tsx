@@ -10,65 +10,81 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Students.module.css";
 
 function Students() {
-const navigate = useNavigate();
-const {
-students,
-isLoading,
-error,
-reload,
-} = useStudents();
+  const navigate = useNavigate();
 
-const {
+  const {
+    students,
+    isLoading,
+    error,
+    reload,
+  } = useStudents();
+
+  const {
     search,
     setSearch,
     filteredStudents,
-} = useStudentSearch(students);
+  } = useStudentSearch(students);
 
+  const handleSelectStudent = (student: Student) => {
+    navigate(`/students/${student.id}`);
+  };
 
-const handleSelectStudent = (student: Student) => {
-  navigate(`/students/${student.id}`);
-};
+  const handleAddStudent = () => {
+    navigate("/students/add");
+  };
 
+  return (
+    <section className={styles.screen}>
+      <div className={styles.content}>
 
-return ( <section className={styles.screen}> <div className={styles.content}> <div> <h2>Gestión de Alumnos</h2>
+        <div>
+          <h2>Gestión de Alumnos</h2>
 
+          <p>
+            Administra los alumnos registrados en Andrómeda Studio.
+          </p>
+        </div>
 
-      <p>
-        Administra los alumnos registrados en Andrómeda Studio.
-      </p>
-    </div>
+        <StatCard
+          label="Total de Alumnos"
+          value={students.length}
+        />
 
-    <StatCard
-      label="Total de Alumnos"
-      value={students.length}
-    />
+        <div className={styles.addStudentContainer}>
+          <button
+            className={styles.addButton}
+            onClick={handleAddStudent}
+            type="button"
+          >
+            + Añadir Alumno
+          </button>
+        </div>
 
-    <div className={styles.topRow}>
-      <SearchBar
-        value={search}
-        onChange={setSearch}
-        placeholder="Buscar alumno"
-      />
-    </div>
+        <div className={styles.topRow}>
+          <SearchBar
+            value={search}
+            onChange={setSearch}
+            placeholder="Buscar alumno"
+          />
+        </div>
 
-    <Table<Student>
-      data={filteredStudents}
-      columns={studentTableColumns}
-      isLoading={isLoading}
-      error={error}
-      onRetry={reload}
-      onRowClick={handleSelectStudent}
-      emptyMessage={
-        search
-          ? "No se encontraron alumnos."
-          : "No hay alumnos para mostrar."
-      }
-    />
-  </div>
-</section>
+        <Table<Student>
+          data={filteredStudents}
+          columns={studentTableColumns}
+          isLoading={isLoading}
+          error={error}
+          onRetry={reload}
+          onRowClick={handleSelectStudent}
+          emptyMessage={
+            search
+              ? "No se encontraron alumnos."
+              : "No hay alumnos para mostrar."
+          }
+        />
 
-
-);
+      </div>
+    </section>
+  );
 }
 
 export default Students;
