@@ -2,6 +2,7 @@ import type { Student } from "@/types/student/student";
 import DisplayField from "@/components/displayfield/DisplayField";
 import StatusBadge from "@/components/statusbadge/StatusBadge";
 import { studentDetailDateFormatter } from "@/constants/studentDetail";
+import { useNavigate } from "react-router-dom";
 import styles from "./StudentProfile.module.css";
 
 interface StudentProfileProps {
@@ -9,6 +10,8 @@ interface StudentProfileProps {
 }
 
 function StudentProfile({ student }: StudentProfileProps) {
+  const navigate = useNavigate();
+
   return (
     <article className={styles.profile}>
       <header className={styles.profileHeader}>
@@ -23,7 +26,17 @@ function StudentProfile({ student }: StudentProfileProps) {
             </StatusBadge>
           </div>
         </div>
-        <span className={styles.studentNumber}>Alumno #{student.id}</span>
+        
+        {}
+        <div className={styles.headerRight}>
+          <button 
+            className={styles.editButton}
+            onClick={() => navigate(`/students/${student.id}/edit`)}
+          >
+            Editar perfil
+          </button>
+          <span className={styles.studentNumber}>Alumno #{student.id}</span>
+        </div>
       </header>
 
       <section className={styles.section}>
@@ -53,6 +66,5 @@ function StudentProfile({ student }: StudentProfileProps) {
     </article>
   );
 }
-
 
 export default StudentProfile;

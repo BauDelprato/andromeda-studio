@@ -1,0 +1,35 @@
+.card { background: #ffffff; border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); }
+.profileHeader { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; }
+.identity { display: flex; align-items: center; gap: 20px; }
+.avatar { display: grid; width: 80px; height: 80px; place-items: center; border-radius: 50%; background: #e9e5ff; color: #6b5b95; font-size: 32px; font-weight: 500; text-transform: uppercase; }
+.identity h1 { margin: 0 0 8px 0; font-size: 24px; color: #111111; display: flex; align-items: center; gap: 12px; }
+.badge { font-size: 11px; padding: 4px 10px; border-radius: 12px; background-color: #b8d7a9; color: #42623a; font-weight: 500; }
+.badgeInactive { background-color: #f5f5f6; color: #666; }
+.deactivateButton { background: transparent; border: none; color: #d32f2f; font-size: 15px; font-weight: 500; cursor: pointer; padding: 8px 0; }
+.deactivateButton:hover { text-decoration: underline; }
+.section { margin-bottom: 40px; }
+.heading { font-size: 20px; font-weight: 600; margin-bottom: 24px; color: #111; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 32px; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.label { font-size: 13px; color: #555; font-weight: 500; }
+.input, .textarea { padding: 12px 16px; border: 1px solid #E5E5E5; border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s; }
+.input:focus, .textarea:focus { border-color: #6b5b95; }
+.textarea { resize: vertical; min-height: 100px; }
+.checkboxContainer { display: flex; align-items: center; gap: 12px; font-size: 14px; cursor: pointer; margin-top: 32px; }
+.actions { display: flex; justify-content: center; margin-top: 48px; }
+.saveButton { background: #6b5b95; color: #fff; border: none; padding: 12px 48px; border-radius: 24px; font-weight: 500; font-size: 15px; cursor: pointer; transition: 0.2s; }
+.saveButton:hover:not(:disabled) { background: #5c4d82; }
+.saveButton:disabled { opacity: 0.6; cursor: not-allowed; }
+.successAlert { background: #e8f5e9; color: #2e7d32; padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: center; }
+.errorAlert { background: #ffebee; color: #c62828; padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: center; }
+
+.activateButton { 
+  background: transparent; 
+  border: none; 
+  color: #2e7d32;
+  font-size: 15px; 
+  font-weight: 500; 
+  cursor: pointer; 
+  padding: 8px 0; 
+}
+.activateButton:hover { text-decoration: underline; }
