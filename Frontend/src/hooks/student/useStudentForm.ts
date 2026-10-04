@@ -32,7 +32,6 @@ export function useStudentForm() {
       setValidationError("El DNI debe ser válido (8 dígitos).");
       return;
     }
-
     if (!isValidPhone(form.phone)) {
       setValidationError("El teléfono debe ser válido.");
       return;

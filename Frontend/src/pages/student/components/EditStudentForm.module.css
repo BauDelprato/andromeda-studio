@@ -33,3 +33,7 @@
   padding: 8px 0; 
 }
 .activateButton:hover { text-decoration: underline; }
+
+.fullWidth {
+  grid-column: 1 / -1;
+}

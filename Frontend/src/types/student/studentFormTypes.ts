@@ -8,6 +8,10 @@ export interface StudentFormData {
   notes: string;
 }
 
+export interface EditStudentFormData extends StudentFormData {
+  isActive: boolean;
+}
+
 export const emptyStudentForm: StudentFormData = {
   firstName: "",
   lastName: "",
