@@ -1,15 +1,24 @@
 import { useParams } from "react-router-dom";
 import { useStudentDetail } from "@/hooks/student/useStudentDetail";
 import { EditStudentForm } from "./components/EditStudentForm";
+import { updateStudentApi, changeStudentStatusApi } from "@/api/studentApi"; 
+import type { EditStudentFormData } from "@/types/student/studentFormTypes";
 import styles from "./EditStudentPage.module.css";
 
 export default function EditStudentPage() {
   const { id } = useParams<{ id: string }>();
-  
-  const { student, isLoading, error } = useStudentDetail(id || "");
-
   const studentId = Number(id);
-  const isValidId = id && Number.isInteger(studentId) && studentId > 0;
+  
+  const isValidId = id !== undefined && Number.isInteger(studentId) && studentId > 0;
+  const { student, isLoading, error } = useStudentDetail(id || "");
+  const handleSaveStudent = async (formData: EditStudentFormData) => {
+    if (!student) return;
+    
+    await updateStudentApi(student.id, formData);
+    if (student.isActive !== formData.isActive) {
+      await changeStudentStatusApi(student.id, formData.isActive);
+    }
+  };
 
   if (!isValidId) {
     return (
@@ -27,7 +36,7 @@ export default function EditStudentPage() {
   return (
     <section className={styles.screen}>
       <div className={styles.content}>
-        <EditStudentForm student={student} />
+        <EditStudentForm student={student} onSubmit={handleSaveStudent} />
       </div>
     </section>
   );

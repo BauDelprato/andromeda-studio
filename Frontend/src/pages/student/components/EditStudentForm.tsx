@@ -1,13 +1,15 @@
 import type { Student } from "@/types/student/student";
+import type { EditStudentFormData } from "@/types/student/studentFormTypes";
 import { useEditStudentForm } from "@/hooks/student/useEditStudentForm";
 import styles from "./EditStudentForm.module.css";
 
 interface EditStudentFormProps {
   student: Student;
+  onSubmit: (data: EditStudentFormData) => Promise<void>;
 }
 
-export function EditStudentForm({ student }: EditStudentFormProps) {
-  const { form, updateField, handleSubmit, handleToggleStatus, isUpdating, error, success } = useEditStudentForm(student);
+export function EditStudentForm({ student, onSubmit }: EditStudentFormProps) {
+  const { form, updateField, handleSubmit, handleToggleStatus, isUpdating, error, success } = useEditStudentForm(student, onSubmit);
 
   return (
     <>

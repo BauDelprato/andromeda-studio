@@ -1,10 +1,12 @@
 import { useState, useEffect, type FormEvent } from "react";
 import type { Student } from "@/types/student/student";
 import type { EditStudentFormData } from "@/types/student/studentFormTypes";
-import { updateStudentApi, changeStudentStatusApi } from "@/api/studentApi";
 import { validateStudentForm } from "@/utils/studentValidations";
 
-export function useEditStudentForm(student: Student) {
+export function useEditStudentForm(
+  student: Student,
+  onSubmitApi: (data: EditStudentFormData) => Promise<void>
+) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -19,6 +21,7 @@ export function useEditStudentForm(student: Student) {
     notes: student.notes || "",
     isActive: student.isActive,
   });
+
   useEffect(() => {
     setForm({
       firstName: student.firstName,
@@ -54,12 +57,7 @@ export function useEditStudentForm(student: Student) {
 
     setIsUpdating(true);
     try {
-      await updateStudentApi(student.id, form);
-      
-      if (student.isActive !== form.isActive) {
-        await changeStudentStatusApi(student.id, form.isActive);
-      }
-
+      await onSubmitApi(form);
       setSuccess(true);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Error al actualizar el alumno.";
