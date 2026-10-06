@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getStudents } from "@/api/studentApi";
-import type { Student } from "@/types/student/student";
+import type { Student } from "@/features/students/types/student";
 
 export function useStudents() {
   const [students, setStudents] = useState<Student[]>([]);

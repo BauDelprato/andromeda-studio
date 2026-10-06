@@ -1,6 +1,6 @@
 import { apiFetch } from "./client";
-import type { Student } from "../types/student/student";
-import type { EditStudentFormData, StudentFormData } from "../types/student/studentFormTypes";
+import type { Student } from "../features/students/types/student";
+import type { EditStudentFormData, StudentFormData } from "../features/students/types/studentFormTypes";
 
 export function getStudents() {
   return apiFetch<Student[]>("/api/Students");

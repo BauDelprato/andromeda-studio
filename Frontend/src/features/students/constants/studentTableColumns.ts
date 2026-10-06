@@ -1,7 +1,7 @@
 // constants/studentTableColumns.ts
 
 import type { TableColumn } from "@/components/table/types";
-import type { Student } from "@/types/student/student";
+import type { Student } from "@/features/students/types/student";
 
 export const studentTableColumns: TableColumn<Student>[] = [
   {

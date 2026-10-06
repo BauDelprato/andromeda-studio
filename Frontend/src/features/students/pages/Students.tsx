@@ -1,10 +1,10 @@
 import { SearchBar } from "@/components/searchbar/Searchbar";
 import { StatCard } from "@/components/statcard/Statcard";
 import { Table } from "@/components/table/Table";
-import type { Student } from "@/types/student/student";
-import { useStudentSearch } from "@/hooks/student/useStudentSearch";
-import { useStudents } from "@/hooks/student/useStudents";
-import { studentTableColumns } from "@/constants/studentTableColumns";
+import type { Student } from "@/features/students/types/student";
+import { useStudentSearch } from "@/features/students/hooks/useStudentSearch";
+import { useStudents } from "@/features/students/hooks/useStudents";
+import { studentTableColumns } from "@/features/students/constants/studentTableColumns";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./Students.module.css";

@@ -1,7 +1,7 @@
 import { useState, useEffect, type FormEvent } from "react";
-import type { Student } from "@/types/student/student";
-import type { EditStudentFormData } from "@/types/student/studentFormTypes";
-import { validateStudentForm } from "@/utils/studentValidations";
+import type { Student } from "@/features/students/types/student";
+import type { EditStudentFormData } from "@/features/students/types/studentFormTypes";
+import { validateStudentForm } from "@/features/students/utils/studentValidations";
 
 export function useEditStudentForm(
   student: Student,

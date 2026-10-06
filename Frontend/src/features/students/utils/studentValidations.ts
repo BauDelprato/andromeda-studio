@@ -1,4 +1,4 @@
-import type { EditStudentFormData, StudentFormData } from "@/types/student/studentFormTypes";
+import type { EditStudentFormData, StudentFormData } from "@/features/students/types/studentFormTypes";
 
 export const isValidName = (name: string): boolean => {
   const nameRegex = /^[\p{L}\p{M}\s'-]+$/u;

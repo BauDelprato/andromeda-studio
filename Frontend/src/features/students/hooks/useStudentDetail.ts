@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getStudentById } from "@/api/studentApi";
-import type { Student } from "@/types/student/student";
+import type { Student } from "@/features/students/types/student";
 
 export function useStudentDetail(id: string | undefined) {
   const [student, setStudent] = useState<Student | null>(null);

@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
-import { useStudentDetail } from "@/hooks/student/useStudentDetail";
-import StudentProfile from "./components/StudentProfile";
+import { useStudentDetail } from "@/features/students/hooks/useStudentDetail";
+import StudentProfile from "../components/StudentProfile";
 import styles from "./StudentDetail.module.css";
 
 function StudentDetail() {

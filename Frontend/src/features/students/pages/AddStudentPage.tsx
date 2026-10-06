@@ -1,4 +1,4 @@
-import { StudentForm } from "./components/StudentForm";
+import { StudentForm } from "../components/StudentForm";
 import styles from "./AddStudentPage.module.css";
 
 export default function AddStudentPage() {
