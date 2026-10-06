@@ -1,62 +1,128 @@
 .screen {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-page);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .content {
-  flex: 1;
-  width: 100%;
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 28px 24px 48px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 20px;
+    column-gap: 16px;
+    align-items: center;
 }
 
-.topRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  width: 100%;
-}
+    .content > div:first-child {
+        grid-column: 1 / -1;
+        margin-bottom: 2px;
+    }
 
+        .content > div:first-child h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* Ocultar descripción según permitido en las reglas para coincidir con el diseño */
+        .content > div:first-child p {
+            display: none;
+        }
+
+    /* StatCard en columna 1 */
+    .content > :nth-child(2) {
+        grid-column: 1;
+        justify-self: start;
+    }
+
+/* Botón Añadir Alumno en columna 2, alineado con StatCard */
 .addStudentContainer {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  margin-bottom: 16px;
+    grid-column: 2;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0;
 }
 
 .addButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 18px;
-  border: none;
-  border-radius: var(--radius-md);
-  background-color: var(--color-primary);
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--color-primary);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(99, 29, 130, 0.25);
+    transition: all 0.15s ease;
 }
 
-.addButton:hover {
-  background-color: var(--color-primary-hover);
+    .addButton:hover {
+        background-color: var(--color-primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(99, 29, 130, 0.3);
+    }
+
+    .addButton:active {
+        transform: translateY(0);
+    }
+
+/* Cabecera de la tarjeta de la tabla */
+.topRow {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-bottom: 1px solid #f0f2f5;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 16px 24px;
+    box-sizing: border-box;
+    margin-top: 10px;
 }
 
-@media (max-width: 600px) {
-  .content {
-    padding: 20px 16px 40px;
-  }
+    .topRow::before {
+        content: "Listado de alumnos";
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--color-text);
+        white-space: nowrap;
+    }
 
-  .topRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
+/* La tabla se une a la cabecera formando una sola tarjeta */
+.screen .content > :last-child {
+    grid-column: 1 / -1;
+    margin-top: -20px;
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+    }
+
+        .content > :nth-child(2) {
+            grid-column: 1;
+        }
+
+    .addStudentContainer {
+        grid-column: 1;
+        justify-content: flex-start;
+    }
+
+    .topRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
 }

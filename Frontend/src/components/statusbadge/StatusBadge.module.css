@@ -1,17 +1,20 @@
 .badge {
-  display: inline-flex;
-  padding: 4px 11px;
-  border-radius: var(--radius-pill);
-  font-size: 12px;
-  font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
 }
 
 .positive {
-  background: #d9ead4;
-  color: #426b39;
+    background: #dcfce7;
+    color: #15803d;
 }
 
 .negative {
-  background: #f2dede;
-  color: #8b4444;
+    background: #fef3c7;
+    color: #b45309;
 }

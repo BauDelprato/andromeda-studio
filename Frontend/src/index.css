@@ -1,57 +1,57 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 :root {
-  /* Paleta */
-  --color-page: #f4f5f7;
-  --color-surface: #ffffff;
-  --color-border: #e6e7ea;
-  --color-text: #1f2430;
-  --color-text-muted: #6b7280;
-  --color-text-soft: #9aa0ab;
-
-  --color-primary: #6b5b95;
-  --color-primary-hover: #5c4d82;
-  --color-primary-soft: #cfc7dd;
-
-  --color-danger: #d78a8a;
-  --color-danger-strong: #6d2b2b;
-
-  --color-success: #4a9e5c;
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-pill: 999px;
-
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
-  --shadow-md: 0 4px 14px rgba(16, 24, 40, 0.06);
+    /* Paleta */
+    --color-page: #f8f9fb;
+    --color-surface: #ffffff;
+    --color-border: #edf0f5;
+    --color-text: #1a1426;
+    --color-text-muted: #6b7280;
+    --color-text-soft: #9ca3af;
+    --color-primary: #631d82;
+    --color-primary-hover: #75239a;
+    --color-primary-soft: #f2eefa;
+    --sidebar-bg: #240c31;
+    --sidebar-item-active: #3b1850;
+    --sidebar-text: #a795b8;
+    --sidebar-text-active: #ffffff;
+    --color-danger: #f87171;
+    --color-danger-strong: #dc2626;
+    --color-success: #15803d;
+    --color-success-bg: #dcfce7;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-pill: 999px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html,
 body,
 #root {
-  height: 100%;
+    height: 100%;
 }
 
 body {
-  margin: 0;
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background-color: var(--color-page);
-  color: var(--color-text);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--color-page);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 button {
-  font-family: inherit;
-  cursor: pointer;
+    font-family: inherit;
+    cursor: pointer;
 }
 
 input,
 select {
-  font-family: inherit;
+    font-family: inherit;
 }
