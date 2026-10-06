@@ -3,6 +3,7 @@ import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/student/Students";
 import AddStudentPage from "./pages/student/AddStudentPage";
+import EditStudentPage from "./pages/student/EditStudentPage";
 import StudentDetail from "./pages/student/StudentDetail";
 import Crews from "./pages/crew/Crews";
 import Registrations from "./pages/registration/Registrations";
@@ -17,6 +18,7 @@ function App() {
         <Route path="students" element={<Students />} />
         <Route path="students/add" element={<AddStudentPage />} />
         <Route path="students/:id" element={<StudentDetail />} />
+        <Route path="students/:id/edit" element={<EditStudentPage />} />
         <Route path="crews" element={<Crews />} />
         <Route path="registrations" element={<Registrations />} />
         <Route path="payments" element={<Payments />} />

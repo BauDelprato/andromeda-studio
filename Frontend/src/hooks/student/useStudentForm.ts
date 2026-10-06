@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { type StudentFormData, emptyStudentForm } from "@/types/student/studentFormTypes";
 import { useCreateStudent } from "./useCreateStudent";
+import { isValidDni, isValidName, isValidPhone } from "@/utils/studentValidations";
 
 export function useStudentForm() {
   const [form, setForm] = useState<StudentFormData>(emptyStudentForm);
@@ -21,6 +22,21 @@ export function useStudentForm() {
       setValidationError("Por favor completa Nombre, Apellido, DNI y Correo.");
       return;
     }
+
+    if (!isValidName(form.firstName) || !isValidName(form.lastName)) {
+      setValidationError("El nombre y apellido solo pueden contener letras.");
+      return;
+    }
+
+    if (!isValidDni(form.dni)) {
+      setValidationError("El DNI debe ser válido (8 dígitos).");
+      return;
+    }
+    if (!isValidPhone(form.phone)) {
+      setValidationError("El teléfono debe ser válido.");
+      return;
+    }
+
     const isSuccess = await submitStudent(form);
     if (isSuccess) {
         setForm(emptyStudentForm);
