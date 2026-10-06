@@ -6,6 +6,7 @@ import AddStudentPage from "./pages/student/AddStudentPage";
 import EditStudentPage from "./pages/student/EditStudentPage";
 import StudentDetail from "./pages/student/StudentDetail";
 import Crews from "./pages/crew/Crews";
+import CrewEditPage from './pages/crew/CrewEditPage';
 import Registrations from "./pages/registration/Registrations";
 import Payments from "./pages/payment/Payments";
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="students/:id" element={<StudentDetail />} />
         <Route path="students/:id/edit" element={<EditStudentPage />} />
         <Route path="crews" element={<Crews />} />
+        <Route path="crews/:id/edit" element={<CrewEditPage />} />
         <Route path="registrations" element={<Registrations />} />
         <Route path="payments" element={<Payments />} />
       </Route>
