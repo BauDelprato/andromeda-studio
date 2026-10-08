@@ -4,10 +4,10 @@ import { SearchBar } from "@/components/searchbar/Searchbar";
 import { StatCard } from "@/components/statcard/Statcard";
 import { Table } from "@/components/table/Table";
 import type { TableColumn } from "@/components/table/types";
-import { usePayments } from "@/hooks/usePayments";
-import { useStudents } from "@/hooks/student/useStudents";
-import type { Payment, PaymentMethod } from "@/types/payment/payment";
-import type { Student } from "@/types/student/student";
+import { usePayments } from "@/features/payments/hooks/usePayments";
+import { useStudents } from "@/features/students/hooks/useStudents";
+import type { Payment, PaymentMethod } from "@/features/payments/types/payment";
+import type { Student } from "@/features/students/types/student";
 import styles from "./Payments.module.css";
 
 const methodLabels: Record<PaymentMethod, string> = {

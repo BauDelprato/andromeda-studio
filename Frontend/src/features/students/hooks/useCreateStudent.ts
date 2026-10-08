@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { createStudent } from "../../api/studentApi";
-import type { StudentFormData } from "../../types/student/studentFormTypes";
+import { createStudent } from "../../../api/studentApi";
+import type { StudentFormData } from "../types/studentFormTypes";
 
 export function useCreateStudent() {
   const [isLoading, setIsLoading] = useState(false);

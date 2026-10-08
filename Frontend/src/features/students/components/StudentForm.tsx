@@ -1,4 +1,4 @@
-import { useStudentForm } from "@/hooks/student/useStudentForm";
+import { useStudentForm } from "@/features/students/hooks/useStudentForm";
 import styles from "./StudentForm.module.css";
 
 export function StudentForm() {

@@ -1,7 +1,7 @@
-import type { Student } from "@/types/student/student";
+import type { Student } from "@/features/students/types/student";
 import DisplayField from "@/components/displayfield/DisplayField";
 import StatusBadge from "@/components/statusbadge/StatusBadge";
-import { studentDetailDateFormatter } from "@/constants/studentDetail";
+import { studentDetailDateFormatter } from "@/features/students/constants/studentDetail";
 import { useNavigate } from "react-router-dom";
 import styles from "./StudentProfile.module.css";
 

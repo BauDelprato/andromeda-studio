@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
-import { type StudentFormData, emptyStudentForm } from "@/types/student/studentFormTypes";
+import { type StudentFormData, emptyStudentForm } from "@/features/students/types/studentFormTypes";
 import { useCreateStudent } from "./useCreateStudent";
-import { isValidDni, isValidName, isValidPhone } from "@/utils/studentValidations";
+import { isValidDni, isValidName, isValidPhone } from "@/features/students/utils/studentValidations";
 
 export function useStudentForm() {
   const [form, setForm] = useState<StudentFormData>(emptyStudentForm);

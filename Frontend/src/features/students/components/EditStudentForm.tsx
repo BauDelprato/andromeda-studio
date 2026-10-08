@@ -1,6 +1,6 @@
-import type { Student } from "@/types/student/student";
-import type { EditStudentFormData } from "@/types/student/studentFormTypes";
-import { useEditStudentForm } from "@/hooks/student/useEditStudentForm";
+import type { Student } from "@/features/students/types/student";
+import type { EditStudentFormData } from "@/features/students/types/studentFormTypes";
+import { useEditStudentForm } from "@/features/students/hooks/useEditStudentForm";
 import styles from "./EditStudentForm.module.css";
 
 interface EditStudentFormProps {

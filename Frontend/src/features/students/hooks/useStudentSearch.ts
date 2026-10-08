@@ -1,6 +1,6 @@
 // hooks/useStudentSearch.ts
 import { useMemo, useState } from "react";
-import type { Student } from "@/types/student/student";
+import type { Student } from "@/features/students/types/student";
 
 export function useStudentSearch(students: Student[]) {
   const [search, setSearch] = useState("");
