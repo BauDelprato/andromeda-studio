@@ -12,10 +12,6 @@ export function EditStudentForm({ student, onSubmit }: EditStudentFormProps) {
   const { form, updateField, handleSubmit, handleToggleStatus, isUpdating, error, success } = useEditStudentForm(student, onSubmit);
 
   return (
-    <>
-      {success && <div className={styles.successAlert}>Alumno actualizado correctamente.</div>}
-      {error && <div className={styles.errorAlert}>{error}</div>}
-
       <form className={styles.card} onSubmit={handleSubmit}>
         
         <header className={styles.profileHeader}>
@@ -81,12 +77,16 @@ export function EditStudentForm({ student, onSubmit }: EditStudentFormProps) {
           </div>
         </section>
 
+          {success && <div className={styles.successAlert}>Alumno actualizado correctamente.</div>}
+          {error && <div className={styles.errorAlert}>{error}</div>}
+
+
         <div className={styles.actions}>
           <button className={styles.saveButton} type="submit" disabled={isUpdating}>
             {isUpdating ? "Guardando..." : "Guardar"}
           </button>
         </div>
       </form>
-    </>
+
   );
 }
