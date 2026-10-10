@@ -60,11 +60,13 @@ namespace Andromeda.Api.Services
                 .FirstOrDefaultAsync();
 
             decimal baseAmount = price != null ? price.Amount : 0;
+
             int currentYear = DateTime.UtcNow.Year;
+            int currentMonth = DateTime.UtcNow.Month;
 
             var newCharges = new List<Charge>();
 
-            for (int month = 3; month <= 12; month++)
+            for (int month = currentMonth; month <= 12; month++)
             {
                 var billingPeriod = new DateOnly(currentYear, month, 1);
 
