@@ -1,0 +1,57 @@
+.card {
+  position: relative;
+  border-radius: 12px;
+  padding: 24px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  border: none;
+  text-align: left;
+  width: 100%;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.mainVariant {
+  background-color: #DCD9E6;
+}
+
+.otherVariant {
+  background-color: #C39CB9;
+}
+
+.title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #444;
+}
+
+.editIcon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  padding: 4px;
+  display: grid;
+  place-items: center;
+}
+
+.editIcon:hover {
+  color: #000;
+}
