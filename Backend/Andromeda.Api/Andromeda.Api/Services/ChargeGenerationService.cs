@@ -45,7 +45,6 @@ namespace Andromeda.Api.Services
                     StudentId = studentId,
                     Type = ChargeType.Registration,
                     Amount = amount,
-                    DiscountAmount = 0,
                     BillingPeriod = billingPeriod
                 });
         }
@@ -131,7 +130,6 @@ namespace Andromeda.Api.Services
                         StudentId = student.Id,
                         Type = ChargeType.Registration,
                         Amount = amount,
-                        DiscountAmount = 0,
                         BillingPeriod = billingPeriod
                     });
 
@@ -177,7 +175,6 @@ namespace Andromeda.Api.Services
                         StudentId = studentCrew.StudentId,
                         Type = ChargeType.Crew,
                         Amount = amount,
-                        DiscountAmount = 0,
                         BillingPeriod = billingPeriod,
                         StudentCrewId = studentCrew.Id
                     });

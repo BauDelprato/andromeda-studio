@@ -10,8 +10,6 @@
         public ChargeType Type { get; set; }
 
         public decimal Amount { get; set; }
-        public decimal DiscountAmount { get; set; }
-
         public int? PriceId { get; set; }
         public Price? Price { get; set; }
 

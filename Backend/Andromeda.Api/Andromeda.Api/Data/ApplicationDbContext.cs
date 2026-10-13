@@ -81,7 +81,11 @@ namespace Andromeda.Api.Data
                 .Property(c => c.Amount)
                 .HasPrecision(18, 2);
 
-            modelBuilder.Entity<Charge>()
+            modelBuilder.Entity<ChargePayment>()
+                .Property(cp => cp.DiscountAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Payment>()
                 .Property(c => c.DiscountAmount)
                 .HasPrecision(18, 2);
 

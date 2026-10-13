@@ -9,5 +9,7 @@
         public Payment Payment { get; set; } = null!;
 
         public decimal Amount { get; set; }
+
+        public decimal DiscountAmount { get; set; }
     }
 }

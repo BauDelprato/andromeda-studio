@@ -81,9 +81,6 @@ namespace Andromeda.Api.Services
                 StudentId = item.Charge.StudentId,
                 Type = item.Charge.Type,
                 Amount = item.Charge.Amount,
-                DiscountAmount = item.Charge.DiscountAmount,
-                PaidAmount = item.PaidAmount,
-                AmountDue = item.Charge.Amount - item.Charge.DiscountAmount - item.PaidAmount,
                 BillingPeriod = item.Charge.BillingPeriod,
                 Status = item.Charge.Status,
                 CreatedAt = item.Charge.CreatedAt
@@ -137,16 +134,13 @@ namespace Andromeda.Api.Services
                 billingPeriod = GetDefaultBillingPeriod(request.Type);
             }
 
-            ValidateAmounts(
-                price.Amount,
-                request.DiscountAmount);
+            
 
             var charge = new Charge
             {
                 StudentId = request.StudentId,
                 Type = request.Type,
                 Amount = price.Amount,
-                DiscountAmount = request.DiscountAmount,
                 PriceId = price.Id,
                 BillingPeriod = billingPeriod,
                 Status = ChargeStatus.Pending,
@@ -183,16 +177,7 @@ namespace Andromeda.Api.Services
                 charge.Amount = request.Amount.Value;
             }
 
-            if (request.DiscountAmount.HasValue)
-            {
-                if (request.DiscountAmount.Value < 0)
-                {
-                    throw new InvalidOperationException(
-                        "El discount amount no puede ser negativo.");
-                }
-
-                charge.DiscountAmount = request.DiscountAmount.Value;
-            }
+            
 
             if (request.BillingPeriod.HasValue)
             {
@@ -203,10 +188,6 @@ namespace Andromeda.Api.Services
             {
                 charge.Status = request.Status.Value;
             }
-
-            ValidateAmounts(
-                charge.Amount,
-                charge.DiscountAmount);
 
             await _context.SaveChangesAsync();
 
@@ -276,12 +257,7 @@ namespace Andromeda.Api.Services
         private void ValidateChargeRequest(
             CreateChargeRequest request)
         {
-            if (request.DiscountAmount < 0)
-            {
-                throw new InvalidOperationException(
-                    "El discount amount no puede ser negativo.");
-            }
-
+            
             if (request.Type == ChargeType.Crew &&
                 !request.StudentCrewId.HasValue)
             {
@@ -297,16 +273,6 @@ namespace Andromeda.Api.Services
             }
         }
 
-        private void ValidateAmounts(
-            decimal amount,
-            decimal discountAmount)
-        {
-            if (discountAmount > amount)
-            {
-                throw new InvalidOperationException(
-                    "El descuento no puede ser mayor que el amount.");
-            }
-        }
 
         private ChargeResponse MapToResponse(Charge charge)
         {
@@ -316,8 +282,6 @@ namespace Andromeda.Api.Services
                 StudentId = charge.StudentId,
                 Type = charge.Type,
                 Amount = charge.Amount,
-                DiscountAmount = charge.DiscountAmount,
-                TotalAmount = charge.Amount - charge.DiscountAmount,
                 BillingPeriod = charge.BillingPeriod,
                 Status = charge.Status,
                 CreatedAt = charge.CreatedAt,
