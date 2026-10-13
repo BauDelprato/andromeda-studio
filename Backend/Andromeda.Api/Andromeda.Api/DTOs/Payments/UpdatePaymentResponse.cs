@@ -7,6 +7,8 @@ namespace Andromeda.Api.DTOs.Payments
         public int Id { get; set; }
         public int StudentId { get; set; }
         public decimal Amount { get; set; }
+
+        public decimal DiscountAmount { get; set; }
         public DateTime Date { get; set; }
         public PaymentMethod Method { get; set; }
         public string? Notes { get; set; }

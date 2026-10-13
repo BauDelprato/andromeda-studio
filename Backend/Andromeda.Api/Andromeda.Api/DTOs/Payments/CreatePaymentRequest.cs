@@ -9,6 +9,8 @@ namespace Andromeda.Api.DTOs.Payments
 
         public decimal Amount { get; set; }
 
+        public decimal DiscountAmount { get; set; }
+
         public DateTime Date { get; set; }
 
         public PaymentMethod Method { get; set; }

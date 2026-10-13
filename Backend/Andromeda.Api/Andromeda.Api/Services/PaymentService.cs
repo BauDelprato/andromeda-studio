@@ -37,6 +37,12 @@ namespace Andromeda.Api.Services
                     "El amount no puede ser negativo.");
             }
 
+            if (request.DiscountAmount > request.Amount)
+            {
+                throw new InvalidOperationException(
+                    "El descuento no puede ser mayor al pago");
+            }
+
             var studentExists = await _context.Students
                 .AnyAsync(s => s.Id == request.StudentId);
 
@@ -50,6 +56,7 @@ namespace Andromeda.Api.Services
             {
                 StudentId = request.StudentId,
                 Amount = request.Amount,
+                DiscountAmount = request.DiscountAmount,
                 Date = request.Date,
                 Method = request.Method,
                 Notes = request.Notes,
@@ -101,6 +108,7 @@ namespace Andromeda.Api.Services
                 Id = payment.Id,
                 StudentId = payment.StudentId,
                 Amount = payment.Amount,
+                DiscountAmount = payment.DiscountAmount,
                 Date = payment.Date,
                 Method = payment.Method,
                 Notes = payment.Notes,
@@ -116,6 +124,7 @@ namespace Andromeda.Api.Services
                 Id = payment.Id,
                 StudentId = payment.StudentId,
                 Amount = payment.Amount,
+                DiscountAmount = payment.DiscountAmount,
                 Date = payment.Date,
                 Method = payment.Method,
                 Notes = payment.Notes,

@@ -14,8 +14,6 @@ namespace Andromeda.Api.DTOs.Charges
 
         public decimal DiscountAmount { get; set; }
 
-        public decimal TotalAmount { get; set; }
-
         public DateOnly? BillingPeriod { get; set; }
 
         public ChargeStatus Status { get; set; }
