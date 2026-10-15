@@ -1,0 +1,23 @@
+.container { padding: 24px; }
+.loading { padding: 24px; color: #666; }
+.emptyState { color: #666; margin-top: 16px; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+.headerLeft { display: flex; gap: 24px; align-items: center; }
+.title { margin: 0; font-size: 32px; }
+.searchSelectWrapper { width: 350px; }
+.editButton { background: none; border: none; color: #6b5b95; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 16px; }
+.statsCard { background-color: #dcd6e3; padding: 16px; border-radius: 8px; margin-bottom: 48px; width: fit-content; }
+.statsText { margin: 0; font-weight: bold; color: #333; }
+.toolbar { display: flex; gap: 16px; margin-bottom: 16px; align-items: center; }
+.searchInput { flex: 1; padding: 10px 16px; border-radius: 8px; border: 1px solid #ccc; outline: none; font-size: 14px; }
+.table { width: 100%; text-align: left; border-collapse: collapse; }
+.th { padding: 12px 8px; border-bottom: 2px solid #eee; color: #666; }
+.tr { border-bottom: 1px solid #eee; }
+.td { padding: 16px 8px; }
+.tdName { padding: 16px 8px; font-weight: 500; }
+.tdEmpty { padding: 16px 8px; text-align: center; color: #666; }
+.actionCell { padding: 16px 8px; }
+.actionWrapper { display: flex; gap: 8px; justify-content: flex-end; }
+.addButton { width: auto; }
+.historyButton { padding: 8px 16px; font-size: 12px; background-color: #7b6b9e; width: auto; }
+.deleteButton { padding: 8px 16px; font-size: 12px; background-color: #dc3545; width: auto; }

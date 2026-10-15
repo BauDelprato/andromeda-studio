@@ -1,0 +1,15 @@
+.container { padding: 24px; max-width: 600px; }
+.header { display: flex; justify-content: space-between; margin-bottom: 32px; }
+.title { margin: 0; font-size: 28px; }
+.backButton { width: auto; background-color: #999; }
+.infoCard { background-color: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 32px; }
+.crewName { margin: 0 0 12px 0; font-size: 18px; color: #333; }
+.infoRow { display: flex; gap: 24px; color: #666; }
+.infoText { margin: 0; }
+.fullText { margin: 0; color: red; }
+.formSection { margin-bottom: 32px; }
+.label { display: block; margin-bottom: 8px; font-weight: bold; }
+.helperText { font-size: 12px; color: #888; margin-top: 8px; }
+.successAlert { background-color: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 24px; }
+.errorAlert { background-color: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 24px; }
+.submitButton { width: 100%; padding: 14px; }

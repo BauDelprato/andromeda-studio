@@ -77,3 +77,6 @@
     grid-template-columns: 1fr;
   }
 }
+
+.otherTitle { margin-top: 16px; }
+.quickActions { display: flex; flex-direction: column; gap: 12px; }

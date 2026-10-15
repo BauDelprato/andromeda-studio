@@ -23,11 +23,18 @@ export interface CrewCategory {
   type: "main" | "other";
 }
 
+export const CREW_LEVEL_NAMES: Record<CrewLevel, string> = {
+  0: "Recreativo",
+  1: "Competencia",
+  2: "Elite",
+};
+
+export const CREW_MAX_CAPACITY: Record<CrewSize, number> = {
+  0: 4,
+  1: 9,
+  2: 40,
+};
+
 export function getCrewMaxCapacity(size: CrewSize): number {
-  switch (size) {
-    case 0: return 4;
-    case 1: return 9;
-    case 2: return 40;
-    default: return 9;
-  }
+  return CREW_MAX_CAPACITY[size];
 }

@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { getCrewMaxCapacity } from "../types/crew";
+import { getCrewMaxCapacity, CREW_LEVEL_NAMES } from "../types/crew";
 import { useAddStudentToCrew } from "../hooks/useAddStudentToCrew";
 import { StudentSearchSelect } from "../components/StudentSearchSelect/StudentSearchSelect";
 import { Button } from "@/components/Button/Button";
+import styles from "./AddStudentToCrewPage.module.css";
 
 export default function AddStudentToCrewPage() {
   const { crewId } = useParams<{ crewId: string }>();
@@ -14,50 +15,51 @@ export default function AddStudentToCrewPage() {
     handleAddStudent, isSubmitting, successMsg, errorMsg, isLoading 
   } = useAddStudentToCrew(Number(crewId));
 
-  if (isLoading) return <div style={{ padding: "24px" }}>Cargando datos...</div>;
-  if (!crew) return <div style={{ padding: "24px", color: "red" }}>No se encontró la crew.</div>;
+  if (isLoading) return <div className={styles.container}>Cargando datos...</div>;
+  if (!crew) return <div className={`${styles.container} ${styles.fullText}`}>No se encontró la crew.</div>;
 
   const maxCapacity = getCrewMaxCapacity(crew.size);
   const isFull = currentStudentsCount >= maxCapacity;
 
   return (
-    <div style={{ padding: "24px", maxWidth: "600px" }}>
-      <header style={{ display: "flex", justifyContent: "space-between", marginBottom: "32px" }}>
-        <h1 style={{ margin: 0, fontSize: "28px" }}>Añadir Alumno</h1>
-        <Button onClick={() => navigate(-1)} style={{ width: "auto", backgroundColor: "#999" }}>
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Añadir Alumno</h1>
+        <Button onClick={() => navigate(-1)} className={styles.backButton}>
           Volver
         </Button>
       </header>
 
-      <div style={{ backgroundColor: "#f9f9f9", padding: "20px", borderRadius: "8px", border: "1px solid #eee", marginBottom: "32px" }}>
-        <h2 style={{ margin: "0 0 12px 0", fontSize: "18px", color: "#333" }}>{crew.name}</h2>
-        <div style={{ display: "flex", gap: "24px", color: "#666" }}>
-          <p style={{ margin: 0 }}>Nivel: <strong>{crew.level === 0 ? "Recreativo" : crew.level === 1 ? "Competencia" : "Elite"}</strong></p>
-          <p style={{ margin: 0, color: isFull ? "red" : "#666" }}>
+      <div className={styles.infoCard}>
+        <h2 className={styles.crewName}>{crew.name}</h2>
+        <div className={styles.infoRow}>
+          <p className={styles.infoText}>Nivel: <strong>{CREW_LEVEL_NAMES[crew.level]}</strong></p>
+          <p className={isFull ? styles.fullText : styles.infoText}>
             Cupo: <strong>{currentStudentsCount} / {maxCapacity}</strong>
           </p>
         </div>
       </div>
 
-      <div style={{ marginBottom: "32px" }}>
-        <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>Seleccionar Alumno</label>
+      <div className={styles.formSection}>
+        <label className={styles.label}>Seleccionar Alumno</label>
         <StudentSearchSelect 
           students={allStudents} 
           selectedStudent={selectedStudent} 
           onSelect={setSelectedStudent} 
         />
-        <p style={{ fontSize: "12px", color: "#888", marginTop: "8px" }}>
-          *Solo aparecen alumnos activos que no están en esta crew.
+        <p className={styles.helperText}>
+          *Solo aparecen alumnos que no están en esta crew.
         </p>
       </div>
 
-      {successMsg && <div style={{ backgroundColor: "#d4edda", color: "#155724", padding: "12px", borderRadius: "8px", marginBottom: "24px" }}>{successMsg}</div>}
-      {errorMsg && <div style={{ backgroundColor: "#f8d7da", color: "#721c24", padding: "12px", borderRadius: "8px", marginBottom: "24px" }}>{errorMsg}</div>}
+      {successMsg && <div className={styles.successAlert}>{successMsg}</div>}
+      {errorMsg && <div className={styles.errorAlert}>{errorMsg}</div>}
 
       <Button 
         onClick={handleAddStudent} 
         disabled={!selectedStudent || isSubmitting || isFull}
-        style={{ width: "100%", padding: "14px", opacity: (!selectedStudent || isFull) ? 0.5 : 1 }}
+        className={styles.submitButton}
+        style={{ opacity: (!selectedStudent || isFull) ? 0.5 : 1 }}
       >
         {isSubmitting ? "Agregando..." : isFull ? "La crew está llena" : "Vincular Alumno"}
       </Button>

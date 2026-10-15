@@ -58,7 +58,7 @@ export default function Crews() {
 
         {otherCategories.length > 0 && (
           <>
-            <h2 className={styles.sectionTitle} style={{ marginTop: "16px" }}>Otros</h2>
+            <h2 className={`${styles.sectionTitle} ${styles.otherTitle}`}>Otros</h2>
             <div className={styles.grid}>
               {otherCategories.map((category) => (
                 <CategoryCard 
@@ -75,11 +75,13 @@ export default function Crews() {
 
       <aside className={styles.sidebar}>
         <h2>Accesos rápidos</h2>
-        <Button onClick={() => console.log("Actualizar cuotas")}>Actualizar cuotas</Button>
-        <div style={{ height: 12 }}></div>
-        <Button onClick={() => console.log("Establecer cupos")}>Establecer cupos</Button>
-        <div style={{ height: 12 }}></div>
-        <Button onClick={() => console.log("Crear Crew")}>+ Crear Crew</Button>
+        
+        <div className={styles.quickActions}>
+          <Button onClick={() => console.log("Actualizar cuotas")}>Actualizar cuotas</Button>
+          <Button onClick={() => console.log("Establecer cupos")}>Establecer cupos</Button>
+          <Button onClick={() => console.log("Crear Crew")}>+ Crear Crew</Button>
+        </div>
+        
       </aside>
     </div>
   );
