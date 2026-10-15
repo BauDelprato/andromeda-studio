@@ -4,6 +4,9 @@ import { type CrewLevel, getCrewMaxCapacity, CREW_LEVEL_NAMES } from "../types/c
 import { useCrewProfile } from "../hooks/useCrewProfile";
 import { CrewSearchSelect } from "../components/CrewSearchSelect/CrewSearchSelect";
 import { Button } from "@/components/Button/Button";
+import { Table } from "@/components/table/Table";
+import type { TableColumn } from "@/components/table/types";
+import type { Student } from "@/features/students/types/student";
 import styles from "./CrewProfile.module.css";
 
 export default function CrewProfile() {
@@ -15,7 +18,8 @@ export default function CrewProfile() {
 
   const { 
     categoryCrews, selectedCrew, setSelectedCrew, crewStudents, 
-    isLoading, handleRemoveStudent 
+    isLoading, handleRemoveStudent,
+    isLoadingStudents, studentsError, reloadStudents
   } = useCrewProfile(levelEnum);
 
   const [studentSearchTerm, setStudentSearchTerm] = useState("");
@@ -27,11 +31,46 @@ export default function CrewProfile() {
     });
   }, [crewStudents, studentSearchTerm]);
 
+  const tableColumns: TableColumn<Student>[] = [
+    {
+      header: "Nombre",
+      className: styles.tdName,
+      render: (student) => `${student.firstName} ${student.lastName}`,
+    },
+    {
+      header: "DNI",
+      render: (student) => student.dni,
+    },
+    {
+      header: "Estado",
+      render: (student) => student.isActive ? "Activo" : "Inactivo",
+    },
+    {
+      header: "Acciones",
+      render: (student) => (
+        <div className={styles.actionWrapper}>
+          <Button 
+            className={styles.historyButton} 
+            disabled
+            title="Próximamente"
+          >
+            Historial
+          </Button>
+          <Button 
+            className={styles.deleteButton}
+            onClick={() => handleRemoveStudent(student.id)}
+          >
+            Eliminar
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   if (isLoading) return <div className={styles.loading}>Cargando...</div>;
 
   return (
     <div className={styles.container}>
-      
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <h1 className={styles.title}>{categoryName}</h1>
@@ -45,7 +84,12 @@ export default function CrewProfile() {
         </div>
         
         {selectedCrew && (
-          <button className={styles.editButton} onClick={() => console.log("Editar:", selectedCrew.id)}>
+          <button 
+            className={styles.editButton} 
+            disabled
+            title="Próximamente"
+            style={{ opacity: 0.5, cursor: "not-allowed" }}
+          >
             Editar Crew <span></span>
           </button>
         )}
@@ -74,46 +118,15 @@ export default function CrewProfile() {
             </Button>
           </div>
 
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th className={styles.th}>Nombre</th>
-                <th className={styles.th}>DNI</th>
-                <th className={styles.th}>Estado</th>
-                <th className={styles.th}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredStudents.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className={styles.tdEmpty}>
-                    {studentSearchTerm ? "No se encontraron alumnos con esa búsqueda." : "No hay alumnos inscriptos."}
-                  </td>
-                </tr>
-              ) : (
-                filteredStudents.map((student) => (
-                  <tr key={student.id} className={styles.tr}>
-                    <td className={styles.tdName}>{student.firstName} {student.lastName}</td>
-                    <td className={styles.td}>{student.dni}</td>
-                    <td className={styles.td}>{student.isActive ? "Activo" : "Inactivo"}</td>
-                    <td className={styles.actionCell}>
-                      <div className={styles.actionWrapper}>
-                        <Button className={styles.historyButton} onClick={() => console.log("Ver historial")}>
-                          Historial
-                        </Button>
-                        <Button 
-                          className={styles.deleteButton}
-                          onClick={() => handleRemoveStudent(student.id)}
-                        >
-                          Eliminar
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+          <Table 
+            data={filteredStudents}
+            columns={tableColumns}
+            isLoading={isLoadingStudents} 
+            error={studentsError} 
+            onRetry={reloadStudents}
+            emptyMessage={studentSearchTerm ? "No se encontraron alumnos con esa búsqueda." : "No hay alumnos inscriptos."}
+            getRowKey={(student) => student.id}
+          />
         </>
       )}
     </div>
