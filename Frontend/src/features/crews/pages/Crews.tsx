@@ -3,17 +3,19 @@ import { useCrewCategories } from "../hooks/useCrewCategories";
 import { CategoryCard } from "../components/CategoryCard/CategoryCard";
 import styles from "./Crews.module.css";
 import { Button } from "@/components/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 export default function Crews() {
   const { categories, isLoading, error } = useCrewCategories();
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const handleEdit = (id: number) => {
     console.log("Navegar a edición de categoría:", id);
   };
 
   const handleOpenCategory = (id: number) => {
-    console.log("Navegar al detalle de la categoría:", id);
+    navigate(`/crews/${id}`);
   };
 
   const filteredCategories = categories.filter((c) => 
