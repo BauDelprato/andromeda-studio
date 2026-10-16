@@ -43,7 +43,7 @@ namespace Andromeda.Api.Controllers
         [HttpDelete("{studentId}/{crewId}")]
         public async Task<IActionResult> DeleteStudentCrew(int studentId, int crewId)
         {
-            // Implementation for deleting a StudentCrew instance
+            await _studentCrewService.DeleteAsync(studentId, crewId);
             return NoContent();
         }
     }

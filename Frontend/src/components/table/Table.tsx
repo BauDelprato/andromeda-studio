@@ -12,6 +12,7 @@ export function Table<T>({
   onRetry,
   onRowClick,
   minRows = DEFAULT_MIN_ROWS,
+  getRowKey,
 }: TableProps<T>) {
   const emptyRows = Math.max(0, minRows - data.length)
 
@@ -58,6 +59,7 @@ export function Table<T>({
         {!isLoading &&
           !error &&
           data.map((item, index) => {
+            const itemKey = getRowKey ? getRowKey(item) : index;
             const rowContent = (
               <>
                 {columns.map((column) => (
@@ -71,7 +73,7 @@ export function Table<T>({
             if (onRowClick) {
               return (
                 <button
-                  key={index}
+                  key={itemKey}
                   type="button"
                   className={styles.dataRow}
                   onClick={() => onRowClick(item)}
@@ -86,7 +88,7 @@ export function Table<T>({
 
             return (
               <div
-                key={index}
+                key={itemKey}
                 className={styles.dataRow}
                 style={{
                   gridTemplateColumns: `repeat(${columns.length}, 1fr)`,

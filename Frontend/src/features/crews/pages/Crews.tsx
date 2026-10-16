@@ -3,17 +3,19 @@ import { useCrewCategories } from "../hooks/useCrewCategories";
 import { CategoryCard } from "../components/CategoryCard/CategoryCard";
 import styles from "./Crews.module.css";
 import { Button } from "@/components/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 export default function Crews() {
   const { categories, isLoading, error } = useCrewCategories();
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const handleEdit = (id: number) => {
     console.log("Navegar a edición de categoría:", id);
   };
 
   const handleOpenCategory = (id: number) => {
-    console.log("Navegar al detalle de la categoría:", id);
+    navigate(`/crews/${id}`);
   };
 
   const filteredCategories = categories.filter((c) => 
@@ -56,7 +58,7 @@ export default function Crews() {
 
         {otherCategories.length > 0 && (
           <>
-            <h2 className={styles.sectionTitle} style={{ marginTop: "16px" }}>Otros</h2>
+            <h2 className={`${styles.sectionTitle} ${styles.otherTitle}`}>Otros</h2>
             <div className={styles.grid}>
               {otherCategories.map((category) => (
                 <CategoryCard 
@@ -73,11 +75,13 @@ export default function Crews() {
 
       <aside className={styles.sidebar}>
         <h2>Accesos rápidos</h2>
-        <Button onClick={() => console.log("Actualizar cuotas")}>Actualizar cuotas</Button>
-        <div style={{ height: 12 }}></div>
-        <Button onClick={() => console.log("Establecer cupos")}>Establecer cupos</Button>
-        <div style={{ height: 12 }}></div>
-        <Button onClick={() => console.log("Crear Crew")}>+ Crear Crew</Button>
+        
+        <div className={styles.quickActions}>
+          <Button onClick={() => console.log("Actualizar cuotas")}>Actualizar cuotas</Button>
+          <Button onClick={() => console.log("Establecer cupos")}>Establecer cupos</Button>
+          <Button onClick={() => console.log("Crear Crew")}>+ Crear Crew</Button>
+        </div>
+        
       </aside>
     </div>
   );

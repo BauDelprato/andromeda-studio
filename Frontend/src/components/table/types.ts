@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import type { Key, ReactNode } from "react"
 
 export interface TableColumn<T> {
   header: string
@@ -15,4 +15,5 @@ export interface TableProps<T> {
   onRetry?: () => void
   onRowClick?: (item: T) => void
   minRows?: number
+  getRowKey?: (item: T) => Key
 }
