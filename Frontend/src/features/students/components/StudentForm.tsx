@@ -44,7 +44,7 @@ export function StudentForm() {
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.heading}>Salud y Aclaraciones</h2>
+          <h2 className={styles.heading}>Salud</h2>
           <div className={styles.healthGrid}>
             
             <label className={styles.checkboxContainer}>

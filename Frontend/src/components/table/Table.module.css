@@ -49,6 +49,16 @@ button.dataRow {
     cursor: pointer;
 }
 
+button.dataRow > span:first-child {
+    transition: color 0.15s ease;
+}
+
+button.dataRow:hover > span:first-child {
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
 .dataRow:hover {
     background-color: #fafbfc;
 }

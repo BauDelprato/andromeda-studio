@@ -4,7 +4,7 @@
     border-radius: var(--radius-lg);
     padding: 36px 40px;
     box-shadow: var(--shadow-sm);
-    max-width: 860px;
+    width: 100%;
 }
 
 .title {

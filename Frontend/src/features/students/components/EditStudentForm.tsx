@@ -64,7 +64,7 @@ export function EditStudentForm({ student, onSubmit }: EditStudentFormProps) {
           </div>
         </section>
         <section className={styles.section}>
-          <h2 className={styles.heading}>Salud y Aclaraciones</h2>
+          <h2 className={styles.heading}>Salud</h2>
           <div className={styles.grid}>
             <label className={styles.checkboxContainer}>
               <input type="checkbox" checked={form.fitnessCertificate} onChange={(e) => updateField("fitnessCertificate", e.target.checked)} />

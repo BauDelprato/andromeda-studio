@@ -56,14 +56,18 @@
 .notes h2 {
   margin: 0 0 18px;
   color: var(--color-text);
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .detailsGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px 32px;
+}
+
+.detailsGrid > div > :first-child {
+  font-weight: 600;
 }
 
 .notes {
@@ -101,19 +105,20 @@
   min-width: 100px;
   justify-content: center;
   padding: 5px 12px;
-  border: 1px solid var(--color-border);
+  border: 1px solid transparent;
   border-radius: var(--radius-pill);
   font-size: 12px;
+  font-weight: 600;
 }
 
 .answerYes {
-  background: #eee9f5;
-  color: var(--color-primary-hover);
+  background: #dcfce7;
+  color: #15803d;
 }
 
 .answerNo {
-  background: #f5f5f6;
-  color: var(--color-text-muted);
+  background: #fef3c7;
+  color: #b45309;
 }
 
 @media (max-width: 600px) {

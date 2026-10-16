@@ -49,20 +49,21 @@ function StudentProfile({ student }: StudentProfileProps) {
         </div>
       </section>
 
-      <section className={styles.notes}>
-        <h2>Aclaraciones</h2>
-        <p>{student.notes?.trim() || "Sin aclaraciones registradas."}</p>
-      </section>
-
       <section className={styles.section}>
-        <h2>Competencias</h2>
+        <h2>Salud</h2>
         <div className={styles.competency}>
-          <span>Certificado físico</span>
+          <span>Certificado apto físico</span>
           <span className={`${styles.answer} ${student.fitnessCertificate ? styles.answerYes : styles.answerNo}`}>
             {student.fitnessCertificate ? "Presentado" : "Pendiente"}
           </span>
         </div>
       </section>
+
+      <section className={styles.notes}>
+        <h2>Aclaraciones</h2>
+        <p>{student.notes?.trim() || "Sin aclaraciones registradas."}</p>
+      </section>
+      
     </article>
   );
 }

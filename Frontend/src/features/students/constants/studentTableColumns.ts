@@ -1,5 +1,7 @@
 // constants/studentTableColumns.ts
 
+import { createElement } from "react";
+import StatusBadge from "@/components/statusbadge/StatusBadge";
 import type { TableColumn } from "@/components/table/types";
 import type { Student } from "@/features/students/types/student";
 
@@ -20,6 +22,9 @@ export const studentTableColumns: TableColumn<Student>[] = [
   {
     header: "Estado",
     render: (student) =>
-      student.isActive ? "Activo" : "Inactivo",
+      createElement(StatusBadge, {
+        variant: student.isActive ? "positive" : "negative",
+        children: student.isActive ? "Activo" : "Inactivo",
+      }),
   },
 ];
