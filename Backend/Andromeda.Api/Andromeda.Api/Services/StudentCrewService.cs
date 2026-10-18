@@ -49,11 +49,6 @@ namespace Andromeda.Api.Services
             _context.StudentCrew.Add(studentCrew);
             await _context.SaveChangesAsync();
 
-            await _chargeGenerationService.GenerateYearlyCrewChargesAsync(
-                studentCrew.StudentId,
-                studentCrew.CrewId,
-                studentCrew.Id);
-
             return MapToResponse(studentCrew);
         }
 

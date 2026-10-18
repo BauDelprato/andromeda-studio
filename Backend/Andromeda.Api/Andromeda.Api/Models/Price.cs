@@ -10,7 +10,9 @@
 
         public decimal Amount { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public DateOnly ValidFrom { get; set; }
+
+        public DateOnly? ValidTo { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

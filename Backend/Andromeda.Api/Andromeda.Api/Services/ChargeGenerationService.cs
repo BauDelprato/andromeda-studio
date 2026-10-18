@@ -34,7 +34,10 @@ namespace Andromeda.Api.Services
             }
 
             var price = await _context.Set<Price>()
-                .Where(p => p.Type == PriceType.Registration && p.IsActive)
+                .Where(p =>
+                    p.Type == PriceType.Registration &&
+                    p.ValidFrom <= billingPeriod &&
+                    (p.ValidTo == null || p.ValidTo >= billingPeriod))
                 .FirstOrDefaultAsync();
 
             decimal amount = price != null ? price.Amount : 0;
@@ -54,12 +57,6 @@ namespace Andromeda.Api.Services
             var crew = await _context.Crews.FindAsync(crewId);
             if (crew == null) return;
 
-            var price = await _context.Set<Price>()
-                .Where(p => p.Type == PriceType.Crew && p.CrewLevel == crew.Level && p.IsActive)
-                .FirstOrDefaultAsync();
-
-            decimal baseAmount = price != null ? price.Amount : 0;
-
             int currentYear = DateTime.UtcNow.Year;
             int currentMonth = DateTime.UtcNow.Month;
 
@@ -76,6 +73,16 @@ namespace Andromeda.Api.Services
 
                 if (!alreadyExists)
                 {
+                    var price = await _context.Set<Price>()
+                        .Where(p =>
+                            p.Type == PriceType.Crew &&
+                            p.CrewLevel == crew.Level &&
+                            p.ValidFrom <= billingPeriod &&
+                            (p.ValidTo == null || p.ValidTo >= billingPeriod))
+                        .FirstOrDefaultAsync();
+
+                    decimal baseAmount = price != null ? price.Amount : 0;
+
                     newCharges.Add(new Charge
                     {
                         StudentId = studentId,
@@ -101,7 +108,10 @@ namespace Andromeda.Api.Services
             DateOnly billingPeriod)
         {
             var price = await _context.Set<Price>()
-                .Where(p => p.Type == PriceType.Registration && p.IsActive)
+                .Where(p =>
+                    p.Type == PriceType.Registration &&
+                    p.ValidFrom <= billingPeriod &&
+                    (p.ValidTo == null || p.ValidTo >= billingPeriod))
                 .FirstOrDefaultAsync();
 
             decimal amount = price != null ? price.Amount : 0;
@@ -164,7 +174,11 @@ namespace Andromeda.Api.Services
                 }
 
                 var price = await _context.Set<Price>()
-                    .Where(p => p.Type == PriceType.Crew && p.CrewLevel == studentCrew.Crew.Level && p.IsActive)
+                    .Where(p =>
+                        p.Type == PriceType.Crew &&
+                        p.CrewLevel == studentCrew.Crew.Level &&
+                        p.ValidFrom <= billingPeriod &&
+                        (p.ValidTo == null || p.ValidTo >= billingPeriod))
                     .FirstOrDefaultAsync();
 
                 decimal amount = price != null ? price.Amount : 0;

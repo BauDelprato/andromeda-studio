@@ -45,16 +45,33 @@ namespace Andromeda.Api.Services
         {
             ValidatePriceRequest(request);
 
-            var existingActivePrice = await _context.Prices
+            var existingPrices = await _context.Prices
                 .Where(p =>
                     p.Type == request.Type &&
-                    p.CrewLevel == request.CrewLevel &&
-                    p.IsActive)
+                    p.CrewLevel == request.CrewLevel)
                 .ToListAsync();
 
-            foreach (var price in existingActivePrice)
+            foreach (var price in existingPrices) //verificación de superposición de precios
             {
-                price.IsActive = false;
+                bool overlaps =
+                    (!price.ValidTo.HasValue ||
+                     request.ValidFrom < price.ValidTo.Value) &&
+                    (!request.ValidTo.HasValue ||
+                     price.ValidFrom < request.ValidTo.Value);
+
+                if (!overlaps)
+                {
+                    continue;
+                }
+
+                if (price.ValidFrom >= request.ValidFrom)
+                {
+                    throw new InvalidOperationException(
+                        "El período de vigencia se superpone con otro precio existente.");
+                }
+
+                // Cierra el precio anterior cuando comienza el nuevo
+                price.ValidTo = request.ValidFrom;
             }
 
             var priceToCreate = new Price
@@ -62,8 +79,9 @@ namespace Andromeda.Api.Services
                 Type = request.Type,
                 CrewLevel = request.CrewLevel,
                 Amount = request.Amount,
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                ValidFrom = request.ValidFrom,
+                ValidTo = request.ValidTo
             };
 
             _context.Prices.Add(priceToCreate);
@@ -95,25 +113,16 @@ namespace Andromeda.Api.Services
                 price.Amount = request.Amount.Value;
             }
 
-            if (request.IsActive.HasValue)
+            if (request.ValidFrom.HasValue ||
+                request.ValidTo.HasValue)
             {
-                if (request.IsActive.Value)
-                {
-                    var existingActivePrice = await _context.Prices
-                        .Where(p =>
-                            p.Id != price.Id &&
-                            p.Type == price.Type &&
-                            p.CrewLevel == price.CrewLevel &&
-                            p.IsActive)
-                        .ToListAsync();
+                var validFrom = request.ValidFrom ?? price.ValidFrom;
+                var validTo = request.ValidTo ?? price.ValidTo;
 
-                    foreach (var activePrice in existingActivePrice)
-                    {
-                        activePrice.IsActive = false;
-                    }
-                }
+                ValidateValidityPeriod(validFrom, validTo);
 
-                price.IsActive = request.IsActive.Value;
+                price.ValidFrom = validFrom;
+                price.ValidTo = validTo;
             }
 
             await _context.SaveChangesAsync();
@@ -125,24 +134,51 @@ namespace Andromeda.Api.Services
             PriceType type,
             CrewLevel? crewLevel = null)
         {
-            var price = await _context.Prices
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            return await GetPriceForPeriodAsync(
+                type,
+                today,
+                crewLevel);
+        }
+
+        public async Task<Price> GetPriceForPeriodAsync(
+            PriceType type,
+            DateOnly period,
+            CrewLevel? crewLevel = null)
+        {
+            var prices = await _context.Prices
                 .Where(p =>
                     p.Type == type &&
                     p.CrewLevel == crewLevel &&
-                    p.IsActive)
-                .OrderByDescending(p => p.CreatedAt)
-                .FirstOrDefaultAsync();
+                    p.ValidFrom <= period &&
+                    (!p.ValidTo.HasValue ||
+                     period < p.ValidTo.Value))
+                .OrderByDescending(p => p.ValidFrom)
+                .Take(2)
+                .ToListAsync();
 
-            if (price == null)
+            if (prices.Count > 1)
             {
                 throw new InvalidOperationException(
-                    $"No existe un precio activo para {type}" +
+                    $"Existe más de un precio vigente para {type}" +
                     (crewLevel.HasValue
-                        ? $" y nivel {crewLevel.Value}."
-                        : "."));
+                        ? $" y nivel {crewLevel.Value}"
+                        : "") +
+                    $" en el período {period:yyyy-MM-dd}.");
             }
 
-            return price;
+            if (prices.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    $"No existe un precio vigente para {type}" +
+                    (crewLevel.HasValue
+                        ? $" y nivel {crewLevel.Value}"
+                        : "") +
+                    $" en el período {period:yyyy-MM-dd}.");
+            }
+
+            return prices[0];
         }
 
         private void ValidatePriceRequest(CreatePriceRequest request)
@@ -152,6 +188,10 @@ namespace Andromeda.Api.Services
                 throw new InvalidOperationException(
                     "El amount no puede ser negativo.");
             }
+
+            ValidateValidityPeriod(
+                request.ValidFrom,
+                request.ValidTo);
 
             if (request.Type == PriceType.Crew &&
                 !request.CrewLevel.HasValue)
@@ -168,6 +208,23 @@ namespace Andromeda.Api.Services
             }
         }
 
+        private void ValidateValidityPeriod(
+            DateOnly validFrom,
+            DateOnly? validTo)
+        {
+            if (validFrom == default)
+            {
+                throw new InvalidOperationException(
+                    "ValidFrom es obligatorio.");
+            }
+
+            if (validTo.HasValue && validTo.Value <= validFrom)
+            {
+                throw new InvalidOperationException(
+                    "ValidTo debe ser posterior a ValidFrom.");
+            }
+        }
+
         private PriceResponse MapToResponse(Price price)
         {
             return new PriceResponse
@@ -176,8 +233,9 @@ namespace Andromeda.Api.Services
                 Type = price.Type,
                 CrewLevel = price.CrewLevel,
                 Amount = price.Amount,
-                IsActive = price.IsActive,
-                CreatedAt = price.CreatedAt
+                CreatedAt = price.CreatedAt,
+                ValidFrom = price.ValidFrom,
+                ValidTo = price.ValidTo
             };
         }
     }

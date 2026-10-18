@@ -9,5 +9,9 @@ namespace Andromeda.Api.DTOs.Prices
         public CrewLevel? CrewLevel { get; set; }
 
         public decimal Amount { get; set; }
+
+        public DateOnly ValidFrom { get; set; }
+
+        public DateOnly? ValidTo { get; set; }
     }
 }

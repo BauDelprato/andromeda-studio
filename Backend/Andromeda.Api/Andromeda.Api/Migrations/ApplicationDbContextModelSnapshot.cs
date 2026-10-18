@@ -186,11 +186,14 @@ namespace Andromeda.Api.Migrations
                     b.Property<int?>("CrewLevel")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("Type")
                         .HasColumnType("integer");
+
+                    b.Property<DateOnly>("ValidFrom")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("ValidTo")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 

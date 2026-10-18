@@ -4,6 +4,8 @@
     {
         public decimal? Amount { get; set; }
 
-        public bool? IsActive { get; set; }
+        public DateOnly? ValidFrom { get; set; }
+
+        public DateOnly? ValidTo { get; set; }
     }
 }

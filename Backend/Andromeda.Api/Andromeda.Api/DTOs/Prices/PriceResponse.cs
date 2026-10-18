@@ -12,8 +12,10 @@ namespace Andromeda.Api.DTOs.Prices
 
         public decimal Amount { get; set; }
 
-        public bool IsActive { get; set; }
-
         public DateTime CreatedAt { get; set; }
+
+        public DateOnly ValidFrom { get; set; }
+
+        public DateOnly? ValidTo { get; set; }
     }
 }
