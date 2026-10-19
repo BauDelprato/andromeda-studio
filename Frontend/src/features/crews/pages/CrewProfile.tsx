@@ -86,9 +86,8 @@ export default function CrewProfile() {
         {selectedCrew && (
           <button 
             className={styles.editButton} 
-            disabled
-            title="Próximamente"
-            style={{ opacity: 0.5, cursor: "not-allowed" }}
+            title="button"
+            onClick={() => navigate(`/crews/${selectedCrew.id}/edit`)}
           >
             Editar Crew <span></span>
           </button>

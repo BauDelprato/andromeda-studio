@@ -9,7 +9,7 @@ export interface Crew {
   size: CrewSize;
 }
 
-export interface CreateCrewFormData {
+export interface CrewFormData {
   name: string;
   level: CrewLevel;
   age: number;
