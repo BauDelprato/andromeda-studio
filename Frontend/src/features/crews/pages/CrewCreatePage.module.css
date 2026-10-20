@@ -1,0 +1,20 @@
+.container {
+  padding: 32px;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.title {
+  margin: 0;
+  color: var(--color-text, #1a1426);
+  font-size: 28px;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 24px 16px;
+  }
+}
