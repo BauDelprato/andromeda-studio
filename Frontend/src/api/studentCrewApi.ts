@@ -1,8 +1,12 @@
 import { apiFetch } from "./client";
 import type { StudentCrewResponse } from "@/features/crews/types/studentCrew";
 
+export function getStudentCrews() {
+  return apiFetch<StudentCrewResponse[]>("/api/StudentCrew");
+}
+
 export async function getStudentCrewsByCrew(crewId: number) {
-  const allStudentCrews = await apiFetch<StudentCrewResponse[]>("/api/StudentCrew");
+  const allStudentCrews = await getStudentCrews();
   
   return allStudentCrews.filter(sc => sc.crewId === crewId);
 }

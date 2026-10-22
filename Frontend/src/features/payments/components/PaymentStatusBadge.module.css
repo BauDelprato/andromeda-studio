@@ -1,0 +1,35 @@
+.badge {
+  display: inline-flex;
+  min-width: 84px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pending {
+  color: #735d0c;
+  background: #fff1b8;
+}
+
+.paid {
+  color: #426b39;
+  background: #b1d39f;
+}
+
+.partial {
+  color: #744707;
+  background: #ff9f16;
+}
+
+.overdue {
+  color: #7d2229;
+  background: #e7686a;
+}
+
+.cancelled {
+  color: #59525e;
+  background: #e5e1e8;
+}

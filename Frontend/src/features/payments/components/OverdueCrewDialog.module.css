@@ -1,0 +1,63 @@
+.dialog {
+  width: min(100%, 680px);
+  min-height: 420px;
+}
+
+.crewFilter {
+  display: grid;
+  max-width: 300px;
+  gap: 6px;
+  margin-bottom: 18px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.crewFilter select {
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  background: var(--color-surface);
+  font: inherit;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.studentRow {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 18px;
+  border-radius: var(--radius-pill);
+  color: #251c25;
+  background: #dc9397;
+}
+
+.studentRow > span {
+  display: grid;
+  gap: 3px;
+}
+
+.studentRow strong {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.studentRow small {
+  color: #513f48;
+  font-size: 12px;
+}
+
+.empty {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+  color: var(--color-text-muted);
+  text-align: center;
+}
