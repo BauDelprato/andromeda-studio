@@ -19,6 +19,8 @@ namespace Andromeda.Api.Data
         public DbSet<Price> Prices { get; set; }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Discount> Discounts { get; set; } = null!;
+        public DbSet<PaymentDiscount> PaymentDiscounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +42,17 @@ namespace Andromeda.Api.Data
 
             modelBuilder.Entity<ChargePayment>()
                 .Property(cp => cp.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<PaymentDiscount>()
+                .HasKey(pd => new { pd.PaymentId, pd.DiscountId });
+
+            modelBuilder.Entity<PaymentDiscount>()
+                .Property(pd => pd.AppliedAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Discount>()
+                .Property(d => d.DiscountAmount)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Payment>()

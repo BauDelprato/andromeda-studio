@@ -127,6 +127,33 @@ namespace Andromeda.Api.Migrations
                     b.ToTable("Crews");
                 });
 
+            modelBuilder.Entity("Andromeda.Api.Models.Discount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Discounts");
+                });
+
             modelBuilder.Entity("Andromeda.Api.Models.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -166,6 +193,25 @@ namespace Andromeda.Api.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("Andromeda.Api.Models.PaymentDiscount", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("AppliedAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.HasKey("PaymentId", "DiscountId");
+
+                    b.HasIndex("DiscountId");
+
+                    b.ToTable("PaymentDiscounts");
                 });
 
             modelBuilder.Entity("Andromeda.Api.Models.Price", b =>
@@ -363,6 +409,25 @@ namespace Andromeda.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Andromeda.Api.Models.PaymentDiscount", b =>
+                {
+                    b.HasOne("Andromeda.Api.Models.Discount", "Discount")
+                        .WithMany("PaymentDiscounts")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Andromeda.Api.Models.Payment", "Payment")
+                        .WithMany("PaymentDiscounts")
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Discount");
+
+                    b.Navigation("Payment");
+                });
+
             modelBuilder.Entity("Andromeda.Api.Models.StudentCrew", b =>
                 {
                     b.HasOne("Andromeda.Api.Models.Crew", "Crew")
@@ -380,6 +445,16 @@ namespace Andromeda.Api.Migrations
                     b.Navigation("Crew");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Andromeda.Api.Models.Discount", b =>
+                {
+                    b.Navigation("PaymentDiscounts");
+                });
+
+            modelBuilder.Entity("Andromeda.Api.Models.Payment", b =>
+                {
+                    b.Navigation("PaymentDiscounts");
                 });
 #pragma warning restore 612, 618
         }

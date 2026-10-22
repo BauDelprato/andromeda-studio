@@ -17,6 +17,58 @@ namespace Andromeda.Api.Services
 
         public async Task<PaymentResponse> CreateAsync(CreatePaymentRequest request)
         {
+            var discountsToApply = new List<(int DiscountId, decimal AppliedAmount)>();
+            var discountIds = request.DiscountIds ?? new List<int>();
+
+            if (discountIds.Distinct().Count() != discountIds.Count)
+            {
+                throw new InvalidOperationException("No se puede enviar el mismo descuento más de una vez.");
+            }
+
+            if (discountIds.Any())
+            {
+                var validDiscounts = await _context.Discounts
+                    .Where(d => discountIds.Contains(d.Id) && d.IsActive)
+                    .ToListAsync();
+
+                if (validDiscounts.Count != discountIds.Count)
+                {
+                    throw new InvalidOperationException("Uno o más descuentos no existen o están inactivos.");
+                }
+
+                var chargeIds = request.Charges.Select(c => c.ChargeId).ToList();
+                var totalChargesAmount = await _context.Charges
+                    .Where(c => chargeIds.Contains(c.Id))
+                    .SumAsync(c => c.Amount);
+
+                decimal totalCalculatedDiscount = 0;
+
+                foreach (var discount in validDiscounts)
+                {
+                    decimal appliedForThisDiscount = 0;
+
+                    if (discount.Type == DiscountType.Percentage)
+                    {
+                        appliedForThisDiscount = totalChargesAmount * (discount.DiscountAmount / 100m);
+                    }
+                    else if (discount.Type == DiscountType.FixedAmount)
+                    {
+                        appliedForThisDiscount = discount.DiscountAmount;
+                    }
+
+                    appliedForThisDiscount = Math.Round(appliedForThisDiscount, 2);
+                    totalCalculatedDiscount += appliedForThisDiscount;
+
+                    discountsToApply.Add((discount.Id, appliedForThisDiscount));
+                }
+
+                request.DiscountAmount = totalCalculatedDiscount;
+            }
+            else
+            {
+                request.DiscountAmount = 0;
+            }
+
             if (request.Amount <= 0)
             {
                 throw new InvalidOperationException("El importe del pago debe ser mayor que cero.");
@@ -83,6 +135,20 @@ namespace Andromeda.Api.Services
             _context.Payments.Add(payment);
             await _context.SaveChangesAsync();
 
+            if (discountsToApply.Any())
+            {
+                foreach (var d in discountsToApply)
+                {
+                    _context.PaymentDiscounts.Add(new PaymentDiscount
+                    {
+                        PaymentId = payment.Id,
+                        DiscountId = d.DiscountId,
+                        AppliedAmount = d.AppliedAmount
+                    });
+                }
+                await _context.SaveChangesAsync();
+            }
+
             await CreateAsync(payment, request);
 
             await transaction.CommitAsync();
@@ -108,7 +174,7 @@ namespace Andromeda.Api.Services
                 decimal PreviouslyDiscounted,
                 decimal Outstanding)>();
 
-            foreach (var item in request.Charges) //se recorre cada charge(item) asociado a un mismo payment
+            foreach (var item in request.Charges)
             {
                 var charge = await _context.Charges
                     .FirstOrDefaultAsync(candidate => candidate.Id == item.ChargeId);
@@ -128,15 +194,15 @@ namespace Andromeda.Api.Services
                     throw new InvalidOperationException($"El cargo {item.ChargeId} no admite pagos en su estado actual.");
                 }
 
-                var previouslyPaid = await _context.ChargePayments //comprueba pagos anteriores asociados al mismo charge que se intenta pagar, junta lo anteriormente pagado en perviouslyPaid
+                var previouslyPaid = await _context.ChargePayments
                     .Where(link => link.ChargeId == charge.Id)
                     .SumAsync(link => (decimal?)link.Amount) ?? 0m;
 
-                var previouslyDiscounted = await _context.ChargePayments //lo mismo con el descuento (sirve más para dejar registro del total descontado que para hacer cuentas)
+                var previouslyDiscounted = await _context.ChargePayments
                     .Where(link => link.ChargeId == charge.Id)
                     .SumAsync(link => (decimal?)link.DiscountAmount) ?? 0m;
 
-                var outstanding = charge.Amount - previouslyPaid - previouslyDiscounted; //outstanding es la cantidad que queda pendiente por pagar de un charge
+                var outstanding = charge.Amount - previouslyPaid - previouslyDiscounted;
 
                 if (outstanding <= 0)
                 {
@@ -148,17 +214,9 @@ namespace Andromeda.Api.Services
                     throw new InvalidOperationException($"El cargo {item.ChargeId} tiene un saldo pendiente de {outstanding}. Supera el importe de {item.Amount}");
                 }
 
-                entries.Add(( charge , item.Amount , previouslyPaid , previouslyDiscounted , outstanding ));
+                entries.Add((charge, item.Amount, previouslyPaid, previouslyDiscounted, outstanding));
             }
 
-            if (payment.DiscountAmount < 0)
-            {
-                throw new InvalidOperationException(
-                    "El descuento no puede ser negativo.");
-            }
-
-            // El descuento se distribuye sobre lo que queda pendiente
-            // después de asignar el dinero real de este pago.
             var discountCapacities = entries
                 .Select(entry => entry.Outstanding - entry.Amount)
                 .ToArray();
@@ -218,8 +276,6 @@ namespace Andromeda.Api.Services
                     "No hay saldo disponible para distribuir el descuento.");
             }
 
-            // Se trabaja en centavos para que la suma de las partes
-            // sea exactamente igual al descuento original.
             var totalCents = decimal.ToInt64(discountAmount * 100m);
             var allocatedCents = new long[capacities.Count];
             var remainders = new decimal[capacities.Count];
@@ -237,8 +293,6 @@ namespace Andromeda.Api.Services
 
             var remainingCents = totalCents - allocatedCents.Sum();
 
-            // Los centavos sobrantes van a las partes con mayor
-            // resto decimal, sin superar el saldo de ningún cargo.
             while (remainingCents > 0)
             {
                 var selectedIndex = -1;
@@ -307,4 +361,3 @@ namespace Andromeda.Api.Services
         };
     }
 }
-
