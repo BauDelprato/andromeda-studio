@@ -12,6 +12,7 @@
         public string? Notes { get; set; }
         public string? TransactionReference { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public ICollection<PaymentDiscount> PaymentDiscounts { get; set; } = new List<PaymentDiscount>();
     }
     public enum PaymentMethod
     {

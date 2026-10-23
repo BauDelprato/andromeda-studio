@@ -3,9 +3,6 @@ using Andromeda.Api.DTOs.Payments;
 using Andromeda.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
-
-//tiene solo un get y un create
-
 namespace Andromeda.Api.Services
 {
     public class PaymentService
@@ -26,49 +23,6 @@ namespace Andromeda.Api.Services
             return payments
                 .Select(MapToResponse)
                 .ToList();
-        }
-
-        public async Task<PaymentResponse> CreateAsync(
-            CreatePaymentRequest request)
-        {
-            if (request.Amount < 0)
-            {
-                throw new InvalidOperationException(
-                    "El amount no puede ser negativo.");
-            }
-
-            if (request.DiscountAmount > request.Amount)
-            {
-                throw new InvalidOperationException(
-                    "El descuento no puede ser mayor al pago");
-            }
-
-            var studentExists = await _context.Students
-                .AnyAsync(s => s.Id == request.StudentId);
-
-            if (!studentExists)
-            {
-                throw new InvalidOperationException(
-                    "El estudiante no existe.");
-            }
-
-            var payment = new Payment
-            {
-                StudentId = request.StudentId,
-                Amount = request.Amount,
-                DiscountAmount = request.DiscountAmount,
-                Date = request.Date,
-                Method = request.Method,
-                Notes = request.Notes,
-                TransactionReference = request.TransactionReference,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.Payments.Add(payment);
-
-            await _context.SaveChangesAsync();
-
-            return MapToResponse(payment);
         }
 
         public async Task<UpdatePaymentResponse?> UpdateAsync(
@@ -117,20 +71,17 @@ namespace Andromeda.Api.Services
             };
         }
 
-        private PaymentResponse MapToResponse(Payment payment)
+        private static PaymentResponse MapToResponse(Payment payment) => new()
         {
-            return new PaymentResponse
-            {
-                Id = payment.Id,
-                StudentId = payment.StudentId,
-                Amount = payment.Amount,
-                DiscountAmount = payment.DiscountAmount,
-                Date = payment.Date,
-                Method = payment.Method,
-                Notes = payment.Notes,
-                TransactionReference = payment.TransactionReference,
-                CreatedAt = payment.CreatedAt
-            };
-        }
+            Id = payment.Id,
+            StudentId = payment.StudentId,
+            Amount = payment.Amount,
+            DiscountAmount = payment.DiscountAmount,
+            Date = payment.Date,
+            Method = payment.Method,
+            Notes = payment.Notes,
+            TransactionReference = payment.TransactionReference,
+            CreatedAt = payment.CreatedAt
+        };
     }
 }

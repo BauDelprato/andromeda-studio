@@ -19,6 +19,8 @@ namespace Andromeda.Api.DTOs.Payments
 
         public string? TransactionReference { get; set; }
 
+        public List<int> DiscountIds { get; set; } = new();
+
         public List<CreateChargePaymentRequest> Charges { get; set; } = new();
     }
 }
