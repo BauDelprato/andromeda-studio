@@ -52,56 +52,83 @@ namespace Andromeda.Api.Services
                 });
         }
 
-        public async Task GenerateYearlyCrewChargesAsync(int studentId, int crewId, int studentCrewId)
+        public async Task<List<Charge>> GenerateYearlyCrewChargesAsync( int studentId, int crewId, int studentCrewId, decimal totalAmount)
         {
+            if (totalAmount <= 0 || totalAmount != decimal.Round(totalAmount, 2))
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(totalAmount),
+                    "El monto total debe ser mayor que cero y tener como máximo dos decimales.");
+            }
+
             var crew = await _context.Crews.FindAsync(crewId);
-            if (crew == null) return;
 
-            int currentYear = DateTime.UtcNow.Year;
-            int currentMonth = DateTime.UtcNow.Month;
+            if (crew == null)
+            {
+                throw new KeyNotFoundException(
+                    $"No se encontró la crew con ID {crewId}.");
+            }
 
+            var now = DateTime.UtcNow;
             var newCharges = new List<Charge>();
 
-            for (int month = currentMonth; month <= 12; month++)
+            for (int month = now.Month; month <= 12; month++)
             {
-                var billingPeriod = new DateOnly(currentYear, month, 1);
+                var billingPeriod = new DateOnly(now.Year, month, 1);
 
                 var alreadyExists = await _context.Charges.AnyAsync(c =>
                     c.StudentCrewId == studentCrewId &&
                     c.Type == ChargeType.Crew &&
                     c.BillingPeriod == billingPeriod);
 
-                if (!alreadyExists)
+                if (alreadyExists)
+                    continue;
+
+                var price = await _context.Set<Price>()
+                    .Where(p =>
+                        p.Type == PriceType.Crew &&
+                        p.CrewLevel == crew.Level &&
+                        p.ValidFrom <= billingPeriod &&
+                        (p.ValidTo == null || p.ValidTo >= billingPeriod))
+                    .FirstOrDefaultAsync();
+
+                newCharges.Add(new Charge
                 {
-                    var price = await _context.Set<Price>()
-                        .Where(p =>
-                            p.Type == PriceType.Crew &&
-                            p.CrewLevel == crew.Level &&
-                            p.ValidFrom <= billingPeriod &&
-                            (p.ValidTo == null || p.ValidTo >= billingPeriod))
-                        .FirstOrDefaultAsync();
-
-                    decimal baseAmount = price != null ? price.Amount : 0;
-
-                    newCharges.Add(new Charge
-                    {
-                        StudentId = studentId,
-                        Type = ChargeType.Crew,
-                        Amount = baseAmount,
-                        PriceId = price?.Id,
-                        BillingPeriod = billingPeriod,
-                        Status = ChargeStatus.Pending,
-                        StudentCrewId = studentCrewId,
-                        CreatedAt = DateTime.UtcNow
-                    });
-                }
+                    StudentId = studentId,
+                    Type = ChargeType.Crew,
+                    Amount = 0m,
+                    PriceId = price?.Id,
+                    BillingPeriod = billingPeriod,
+                    Status = ChargeStatus.Pending,
+                    StudentCrewId = studentCrewId,
+                    CreatedAt = now
+                });
             }
 
-            if (newCharges.Any())
+            if (newCharges.Count == 0)
+                return newCharges;
+
+            var monthlyAmount = decimal.Truncate(
+                totalAmount / newCharges.Count * 100m) / 100m;
+
+            var remainingAmount =
+                totalAmount - monthlyAmount * newCharges.Count;
+
+            for (int i = 0; i < newCharges.Count; i++)
             {
-                _context.Charges.AddRange(newCharges);
-                await _context.SaveChangesAsync();
+                var extraCent = remainingAmount >= 0.01m;
+
+                newCharges[i].Amount =
+                    monthlyAmount + (extraCent ? 0.01m : 0m);
+
+                if (extraCent)
+                    remainingAmount -= 0.01m;
             }
+
+            await _context.Charges.AddRangeAsync(newCharges);
+            await _context.SaveChangesAsync();
+
+            return newCharges;
         }
 
         public async Task<int> GenerateAnnualRegistrationChargesAsync(

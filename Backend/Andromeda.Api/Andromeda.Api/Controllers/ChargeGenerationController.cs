@@ -1,4 +1,5 @@
-﻿using Andromeda.Api.Services;
+﻿using Andromeda.Api.DTOs;
+using Andromeda.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Andromeda.Api.Controllers
@@ -13,6 +14,43 @@ namespace Andromeda.Api.Controllers
             ChargeGenerationService chargeGenerationService)
         {
             _chargeGenerationService = chargeGenerationService;
+        }
+
+        [HttpPost("crew/annual")]
+        public async Task<IActionResult> GenerateAnnualCrew(
+    [FromBody] GenerateAnnualCrewChargesRequest request)
+        {
+            try
+            {
+                var generated = await _chargeGenerationService
+                    .GenerateYearlyCrewChargesAsync(
+                        request.StudentId,
+                        request.CrewId,
+                        request.StudentCrewId,
+                        request.Amount);
+
+                return Ok(new
+                {
+                    GeneratedCount = generated.Count,
+                    TotalAmount = request.Amount,
+                    Charges = generated.Select(c => new
+                    {
+                        c.Id,
+                        c.BillingPeriod,
+                        c.Amount,
+                        c.Status,
+                        c.PriceId
+                    })
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("registration/{studentId}")]
