@@ -7,7 +7,6 @@ export function getStudentCrews() {
 
 export async function getStudentCrewsByCrew(crewId: number) {
   const allStudentCrews = await getStudentCrews();
-  
   return allStudentCrews.filter(sc => sc.crewId === crewId);
 }
 

@@ -1,0 +1,153 @@
+.card {
+  width: min(100%, max(620px, 25vw));
+  min-width: min(100%, 320px);
+  padding: 17px 19px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.topline,
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.topline h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.topline p {
+  margin: 3px 0 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.remove {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-danger-strong);
+}
+
+.remove:hover {
+  background: #fbebed;
+}
+
+.chargeList {
+  display: grid;
+  gap: 4px;
+  margin: 13px 0;
+}
+
+.charge {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 11px;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.charge:hover {
+  background: var(--color-page);
+}
+
+.charge input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+}
+
+.chargeInfo {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+}
+
+.chargeInfo strong {
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.chargeInfo small {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.amount {
+  white-space: nowrap;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.empty {
+  margin: 14px 0;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-page);
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.footer {
+  padding-top: 11px;
+  border-top: 1px solid var(--color-border);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.actions button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.actions button:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.actions button:disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.total {
+  white-space: nowrap;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-width: 520px) {
+  .card {
+    width: 100%;
+    min-width: 0;
+    padding: 15px;
+  }
+
+  .footer {
+    align-items: flex-end;
+  }
+}
