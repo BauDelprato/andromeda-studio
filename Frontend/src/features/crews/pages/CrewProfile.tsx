@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { type CrewLevel, getCrewMaxCapacity, CREW_LEVEL_NAMES } from "../types/crew";
 import { useCrewProfile } from "../hooks/useCrewProfile";
 import { CrewSearchSelect } from "../components/CrewSearchSelect/CrewSearchSelect";
@@ -37,7 +37,11 @@ export default function CrewProfile() {
     {
       header: "Nombre",
       className: styles.tdName,
-      render: (student) => `${student.firstName} ${student.lastName}`,
+      render: (student) => (
+        <Link to={`/students/${student.id}`} className={styles.studentLink}>
+          {student.firstName} {student.lastName}
+        </Link>
+      ),
     },
     {
       header: "DNI",

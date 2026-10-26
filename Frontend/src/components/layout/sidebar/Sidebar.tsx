@@ -92,7 +92,7 @@ function Sidebar() {
               <span className={styles.iconWrapper}>
                 <LuLogOut size={20} />
               </span>
-              {!isCollapsed && <span className={styles.linkLabel}>Salir</span>}
+              {!isCollapsed && <span className={styles.linkLabel}>Cerrar sesión</span>}
             </button>
           </li>
         </ul>
