@@ -1,15 +1,112 @@
-.container { padding: 24px; max-width: 600px; }
-.header { display: flex; justify-content: space-between; margin-bottom: 32px; }
-.title { margin: 0; font-size: 28px; }
-.backButton { width: auto; background-color: #999; }
-.infoCard { background-color: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 32px; }
-.crewName { margin: 0 0 12px 0; font-size: 18px; color: #333; }
-.infoRow { display: flex; gap: 24px; color: #666; }
-.infoText { margin: 0; }
-.fullText { margin: 0; color: red; }
-.formSection { margin-bottom: 32px; }
-.label { display: block; margin-bottom: 8px; font-weight: bold; }
-.helperText { font-size: 12px; color: #888; margin-top: 8px; }
-.successAlert { background-color: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 24px; }
-.errorAlert { background-color: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 24px; }
-.submitButton { width: 100%; padding: 14px; }
+.container { 
+  padding: 32px; 
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+.header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 32px; 
+}
+
+.title { 
+  margin: 0; 
+  font-size: 28px; 
+}
+
+.contentWrapper {
+  max-width: 800px; /* Limita el ancho de las tarjetas y el formulario */
+  /* Si prefieres que el formulario quede centrado en la pantalla, descomenta la siguiente línea: */
+  margin: 0 auto; 
+}
+
+.backButton { 
+  width: auto; 
+  background-color: #6b5b95; 
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: #554877; 
+}
+
+.infoCard { 
+  background-color: #f9f9f9; 
+  padding: 24px; 
+  border-radius: 12px; 
+  border: 1px solid #eee; 
+  margin-bottom: 32px; 
+}
+
+.crewName { 
+  margin: 0 0 12px 0; 
+  font-size: 20px; 
+  color: #111; 
+}
+
+.infoRow { 
+  display: flex; 
+  gap: 24px; 
+  color: #555; 
+}
+
+.infoText { 
+  margin: 0; 
+}
+
+.fullText { 
+  margin: 0; 
+  color: #dc3545; 
+  font-weight: 600;
+}
+
+.formSection { 
+  margin-bottom: 32px; 
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.label { 
+  display: block; 
+  margin-bottom: 12px; 
+  font-weight: 600; 
+  color: #333;
+}
+
+.helperText { 
+  font-size: 13px; 
+  color: #888; 
+  margin-top: 12px; 
+}
+
+.successAlert { 
+  background-color: #d1f4e0; 
+  color: #0d7f41; 
+  padding: 16px; 
+  border-radius: 8px; 
+  margin-bottom: 24px; 
+  font-weight: 500;
+}
+
+.errorAlert { 
+  background-color: #fce8e8; 
+  color: #d32f2f; 
+  padding: 16px; 
+  border-radius: 8px; 
+  margin-bottom: 24px; 
+  font-weight: 500;
+}
+
+.submitButton { 
+  width: 100%; 
+  padding: 14px; 
+  font-size: 16px;
+  font-weight: 600;
+}

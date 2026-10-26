@@ -7,6 +7,8 @@ import { Button } from "@/components/Button/Button";
 import { Table } from "@/components/table/Table";
 import type { TableColumn } from "@/components/table/types";
 import type { Student } from "@/features/students/types/student";
+import { SearchBar } from "@/components/searchbar/Searchbar";
+import { LuPencil } from "react-icons/lu"; 
 import styles from "./CrewProfile.module.css";
 
 export default function CrewProfile() {
@@ -43,10 +45,14 @@ export default function CrewProfile() {
     },
     {
       header: "Estado",
-      render: (student) => student.isActive ? "Activo" : "Inactivo",
+      render: (student) => (
+        <span className={student.isActive ? styles.statusActive : styles.statusInactive}>
+          {student.isActive ? "Activo" : "Inactivo"}
+        </span>
+      ),
     },
     {
-      header: "Acciones",
+      header: "", 
       render: (student) => (
         <div className={styles.actionWrapper}>
           <Button 
@@ -54,7 +60,7 @@ export default function CrewProfile() {
             disabled
             title="Próximamente"
           >
-            Historial
+            Historial de pagos
           </Button>
           <Button 
             className={styles.deleteButton}
@@ -86,10 +92,10 @@ export default function CrewProfile() {
         {selectedCrew && (
           <button 
             className={styles.editButton} 
-            title="button"
+            title="Editar Crew"
             onClick={() => navigate(`/crews/${selectedCrew.id}/edit`)}
           >
-            Editar Crew <span></span>
+            Editar Crew <LuPencil size={18} />
           </button>
         )}
       </header>
@@ -98,20 +104,30 @@ export default function CrewProfile() {
         <div className={styles.emptyState}>Selecciona una crew en el buscador para ver sus detalles.</div>
       ) : (
         <>
+          {/* Nueva Tarjeta de Estadísticas Visual */}
           <div className={styles.statsCard}>
-            <p className={styles.statsText}>
-              Alumnos totales: {crewStudents.length}/{getCrewMaxCapacity(selectedCrew.size)}
-            </p>
+            <span className={styles.statsTitle}>Alumnos totales:</span>
+            <div className={styles.progressRow}>
+              <div className={styles.progressBar}>
+                <div 
+                  className={styles.progressFill} 
+                  style={{ width: `${Math.min((crewStudents.length / getCrewMaxCapacity(selectedCrew.size)) * 100, 100)}%` }}
+                ></div>
+              </div>
+              <span className={styles.statsCount}>
+                {crewStudents.length}/{getCrewMaxCapacity(selectedCrew.size)}
+              </span>
+            </div>
           </div>
 
           <div className={styles.toolbar}>
-            <input
-              type="search"
-              placeholder="Buscar alumno..."
-              value={studentSearchTerm}
-              onChange={(e) => setStudentSearchTerm(e.target.value)}
-              className={styles.searchInput}
-            />
+            <div className={styles.searchWrapper}>
+              <SearchBar
+                value={studentSearchTerm}
+                onChange={setStudentSearchTerm}
+                placeholder="Buscar alumno..."
+              />
+            </div>
             <Button className={styles.addButton} onClick={() => navigate(`/crews/add-student/${selectedCrew.id}`)}>
               + Añadir
             </Button>

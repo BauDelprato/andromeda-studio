@@ -6,16 +6,111 @@
 .headerLeft { display: flex; gap: 24px; align-items: center; }
 .title { margin: 0; font-size: 32px; }
 .searchSelectWrapper { width: 350px; }
-.editButton { background: none; border: none; color: #6b5b95; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 16px; }
 
-.statsCard { background-color: #dcd6e3; padding: 16px; border-radius: 8px; margin-bottom: 48px; width: fit-content; }
-.statsText { margin: 0; font-weight: bold; color: #333; }
+.editButton { 
+  background: none; 
+  border: none; 
+  color: #4a3b69; 
+  font-weight: 600; 
+  cursor: pointer; 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  font-size: 15px; 
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+.editButton:hover {
+  background-color: rgba(74, 59, 105, 0.1);
+}
 
-.toolbar { display: flex; gap: 16px; margin-bottom: 16px; align-items: center; }
+.statsCard { 
+  background-color: #dcd6e3; 
+  padding: 16px 24px; 
+  border-radius: 12px; 
+  margin-bottom: 32px; 
+  width: 320px; 
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.statsTitle {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+.progressRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.progressBar {
+  flex: 1;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background-color: #6b5b95;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.statsCount {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.toolbar { 
+  display: flex; 
+  gap: 16px; 
+  margin-bottom: 24px; 
+  align-items: center; 
+  width: 100%;
+}
+
+.searchWrapper {
+  flex: 1; 
+  min-width: 0;
+}
+
+.addButton { 
+  width: 130px; 
+  flex: none; 
+  height: 40px; 
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .searchInput { flex: 1; padding: 10px 16px; border-radius: 8px; border: 1px solid #ccc; outline: none; font-size: 14px; }
 
 .tdName { font-weight: 500; }
 .actionWrapper { display: flex; gap: 8px; justify-content: flex-end; }
-.addButton { width: auto; }
+
+
 .historyButton { padding: 8px 16px; font-size: 12px; background-color: #7b6b9e; width: auto; }
 .deleteButton { padding: 8px 16px; font-size: 12px; background-color: #dc3545; width: auto; }
+
+.statusActive {
+  background-color: #d1f4e0;
+  color: #0d7f41;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.statusInactive {
+  background-color: #fce8e8;
+  color: #d32f2f;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}

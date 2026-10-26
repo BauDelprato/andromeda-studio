@@ -4,6 +4,7 @@ import { CategoryCard } from "../components/CategoryCard/CategoryCard";
 import styles from "./Crews.module.css";
 import { Button } from "@/components/Button/Button";
 import { useNavigate } from "react-router-dom";
+import { SearchBar } from "@/components/searchbar/Searchbar"; 
 
 export default function Crews() {
   const { categories, isLoading, error } = useCrewCategories();
@@ -34,14 +35,15 @@ export default function Crews() {
         
         <header className={styles.header}>
           <h2 className={styles.sectionTitle}>Categorías</h2>
-          <input 
-            type="search" 
-            placeholder="Buscar clase..." 
-            className={styles.searchBar}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
         </header>
+        
+        <section className={styles.searchSection}>
+          <SearchBar 
+            value={searchTerm} 
+            onChange={setSearchTerm} 
+            placeholder="Buscar crews..." 
+          />
+        </section>
 
         {mainCategories.length > 0 && (
           <div className={styles.grid}>
