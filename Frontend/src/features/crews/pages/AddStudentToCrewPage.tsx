@@ -23,46 +23,50 @@ export default function AddStudentToCrewPage() {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Añadir Alumno</h1>
-        <Button onClick={() => navigate(-1)} className={styles.backButton}>
-          Volver
-        </Button>
-      </header>
+      <div className={styles.contentWrapper}>
+        
+        <header className={styles.header}>
+          <h1 className={styles.title}>Añadir Alumno</h1>
+          <Button onClick={() => navigate(-1)} className={styles.backButton}>
+            Volver
+          </Button>
+        </header>
 
-      <div className={styles.infoCard}>
-        <h2 className={styles.crewName}>{crew.name}</h2>
-        <div className={styles.infoRow}>
-          <p className={styles.infoText}>Nivel: <strong>{CREW_LEVEL_NAMES[crew.level]}</strong></p>
-          <p className={isFull ? styles.fullText : styles.infoText}>
-            Cupo: <strong>{currentStudentsCount} / {maxCapacity}</strong>
+        <div className={styles.infoCard}>
+          <h2 className={styles.crewName}>{crew.name}</h2>
+          <div className={styles.infoRow}>
+            <p className={styles.infoText}>Nivel: <strong>{CREW_LEVEL_NAMES[crew.level]}</strong></p>
+            <p className={isFull ? styles.fullText : styles.infoText}>
+              Cupo: <strong>{currentStudentsCount} / {maxCapacity}</strong>
+            </p>
+          </div>
+        </div>
+
+        <div className={styles.formSection}>
+          <label className={styles.label}>Seleccionar Alumno</label>
+          <StudentSearchSelect 
+            students={allStudents} 
+            selectedStudent={selectedStudent} 
+            onSelect={setSelectedStudent} 
+          />
+          <p className={styles.helperText}>
+            *Solo aparecen alumnos que no están en esta crew.
           </p>
         </div>
+
+        {successMsg && <div className={styles.successAlert}>{successMsg}</div>}
+        {errorMsg && <div className={styles.errorAlert}>{errorMsg}</div>}
+
+        <Button 
+          onClick={handleAddStudent} 
+          disabled={!selectedStudent || isSubmitting || isFull}
+          className={styles.submitButton}
+          style={{ opacity: (!selectedStudent || isFull) ? 0.5 : 1 }}
+        >
+          {isSubmitting ? "Agregando..." : isFull ? "La crew está llena" : "Vincular Alumno"}
+        </Button>
+        
       </div>
-
-      <div className={styles.formSection}>
-        <label className={styles.label}>Seleccionar Alumno</label>
-        <StudentSearchSelect 
-          students={allStudents} 
-          selectedStudent={selectedStudent} 
-          onSelect={setSelectedStudent} 
-        />
-        <p className={styles.helperText}>
-          *Solo aparecen alumnos que no están en esta crew.
-        </p>
-      </div>
-
-      {successMsg && <div className={styles.successAlert}>{successMsg}</div>}
-      {errorMsg && <div className={styles.errorAlert}>{errorMsg}</div>}
-
-      <Button 
-        onClick={handleAddStudent} 
-        disabled={!selectedStudent || isSubmitting || isFull}
-        className={styles.submitButton}
-        style={{ opacity: (!selectedStudent || isFull) ? 0.5 : 1 }}
-      >
-        {isSubmitting ? "Agregando..." : isFull ? "La crew está llena" : "Vincular Alumno"}
-      </Button>
     </div>
   );
 }

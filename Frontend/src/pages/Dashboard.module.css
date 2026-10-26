@@ -1,23 +1,275 @@
-.welcomeCard {
-    background-color: #ffffff;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 36px 40px;
-    box-shadow: var(--shadow-sm);
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
     width: 100%;
 }
 
-.title {
-    font-size: 24px;
+/* Barra superior */
+.topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    margin: -32px -40px 4px -40px;
+    padding: 16px 40px;
+}
+
+.topBarLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.pageTitle {
+    margin: 0;
+    font-size: 20px;
     font-weight: 700;
     color: var(--color-text);
-    margin: 0 0 10px 0;
+    letter-spacing: -0.3px;
+}
+
+.currentDate {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary);
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
+}
+
+.topBarActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.searchWrapper {
+    width: 240px;
+}
+
+.searchWrapper form {
+    flex-direction: row-reverse;
+    border-radius: var(--radius-pill);
+    padding: 1px 12px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+}
+
+.searchWrapper button {
+    margin-left: 0;
+    margin-right: 4px;
+}
+
+.notificationBtn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-muted);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.notificationBtn:hover {
+    background-color: var(--color-page);
+    color: var(--color-text);
+}
+
+.notificationDot {
+    position: absolute;
+    top: 8px;
+    right: 9px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--color-danger-strong);
+    border: 1.5px solid var(--color-surface);
+}
+
+/* Banner de bienvenida */
+.welcomeCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    background: linear-gradient(135deg, #240c31 0%, #190722 100%);
+    border-radius: var(--radius-lg);
+    padding: 36px 44px;
+    box-shadow: 0 8px 24px rgba(36, 12, 49, 0.18);
+    width: 100%;
+}
+
+.welcomeContent {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 540px;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
     letter-spacing: -0.5px;
 }
 
 .subtitle {
-    font-size: 15px;
-    color: var(--color-text-muted);
+    font-size: 14px;
+    color: var(--sidebar-text);
     margin: 0;
     line-height: 1.6;
+}
+
+.bannerLogo {
+    width: 84px;
+    height: 84px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* Fila de estadísticas */
+.statsRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.statsRow > * {
+    min-width: 245px;
+    padding: 20px 24px;
+}
+
+.statsRow > :nth-child(2)::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%23631d82' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='20' height='14' x='2' y='5' rx='2'/%3E%3Cline x1='2' x2='22' y1='10' y2='10'/%3E%3C/svg%3E");
+}
+
+/* Sección de Accesos Rápidos */
+.quickAccessSection {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sectionHeading {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.quickActionsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.quickActionBtn {
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: #675478;
+    color: #f3eff7;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.quickActionBtn:hover {
+    background-color: #564566;
+}
+
+/* Grilla de tarjetas de navegación */
+.cardsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.navCard {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: inherit;
+    min-height: 190px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.navCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: #dfd8ec;
+}
+
+.cardIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary);
+    margin-bottom: 18px;
+}
+
+.cardTitle {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.cardDescription {
+    margin: 0;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+@media (max-width: 1100px) {
+    .quickActionsGrid,
+    .cardsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .topBar {
+        margin: -20px -16px 4px -16px;
+        padding: 14px 16px;
+        flex-wrap: wrap;
+    }
+
+    .searchWrapper {
+        width: 180px;
+    }
+
+    .welcomeCard {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 28px 24px;
+    }
+
+    .quickActionsGrid,
+    .cardsGrid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -7,7 +7,7 @@ import {
   LuChevronLeft,
   LuChevronRight,
   LuLogOut,
-  LuNotebookPen,
+  /*LuNotebookPen,*/
   LuUser,
 } from "react-icons/lu";
 import type { IconType } from "react-icons";
@@ -24,7 +24,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Inicio", path: "/", icon: LuLayoutDashboard },
   { label: "Alumnos", path: "/students", icon: LuUser },
   { label: "Grupos", path: "/crews", icon: LuUsers },
-  { label: "Inscripciones", path: "/registrations", icon: LuNotebookPen },
+  /*{ label: "Inscripciones", path: "/registrations", icon: LuNotebookPen },*/
   { label: "Pagos", path: "/payments", icon: LuCreditCard },
   
 ];
@@ -92,7 +92,7 @@ function Sidebar() {
               <span className={styles.iconWrapper}>
                 <LuLogOut size={20} />
               </span>
-              {!isCollapsed && <span className={styles.linkLabel}>Salir</span>}
+              {!isCollapsed && <span className={styles.linkLabel}>Cerrar sesión</span>}
             </button>
           </li>
         </ul>

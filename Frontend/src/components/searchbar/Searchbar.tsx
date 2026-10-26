@@ -1,6 +1,4 @@
-import {
-  LuSearch as Search
-} from "react-icons/lu";
+import { LuSearch as Search } from "react-icons/lu";
 import styles from "./Searchbar.module.css";
 
 export interface SearchOption<T extends string> {

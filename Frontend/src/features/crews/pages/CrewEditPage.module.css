@@ -1,16 +1,37 @@
 .container {
   padding: 32px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.contentWrapper {
+  max-width: 800px;
+  margin: 0 auto; 
 }
 
 .header {
-  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  margin-bottom: 32px;
 }
 
 .title {
   margin: 0;
   color: var(--color-text, #1a1426);
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 600;
+}
+
+.backButton {
+  width: auto;
+  background-color: #6b5b95;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: #554877;
 }
 
 @media (max-width: 640px) {
