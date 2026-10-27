@@ -79,8 +79,7 @@ export default function Crews() {
         <h2>Accesos rápidos</h2>
         
         <div className={styles.quickActions}>
-          <Button onClick={() => console.log("Actualizar cuotas")}>Actualizar cuotas</Button>
-          <Button onClick={() => console.log("Establecer cupos")}>Establecer cupos</Button>
+          <Button onClick={() => navigate("/crews/tariffs")}>Actualizar cuotas</Button>
           <Button onClick={() => navigate("/crews/create")}>+ Crear Crew</Button>
         </div>
         
