@@ -16,6 +16,13 @@ export interface CrewFormData {
   size: CrewSize;
 }
 
+export interface CrewCreateFormValues {
+  name: string;
+  level: CrewLevel | "";
+  age: number | "";
+  size: CrewSize | "";
+}
+
 export interface CrewCategory {
   id: number;
   name: string;
