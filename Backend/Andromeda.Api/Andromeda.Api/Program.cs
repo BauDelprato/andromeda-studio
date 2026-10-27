@@ -57,6 +57,7 @@ builder.Services.AddScoped<ChargeGenerationService>();
 builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<ChargePaymentService>();
 builder.Services.AddScoped<DiscountService>();
+builder.Services.AddScoped<StudentDiscountService>();
 //builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddOpenApi();

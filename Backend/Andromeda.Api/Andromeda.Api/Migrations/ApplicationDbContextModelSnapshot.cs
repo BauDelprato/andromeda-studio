@@ -321,6 +321,21 @@ namespace Andromeda.Api.Migrations
                     b.ToTable("StudentCrew");
                 });
 
+            modelBuilder.Entity("Andromeda.Api.Models.StudentDiscount", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("StudentId", "DiscountId");
+
+                    b.HasIndex("DiscountId");
+
+                    b.ToTable("StudentDiscounts");
+                });
+
             modelBuilder.Entity("Andromeda.Api.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -443,6 +458,25 @@ namespace Andromeda.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Crew");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Andromeda.Api.Models.StudentDiscount", b =>
+                {
+                    b.HasOne("Andromeda.Api.Models.Discount", "Discount")
+                        .WithMany()
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Andromeda.Api.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Discount");
 
                     b.Navigation("Student");
                 });
