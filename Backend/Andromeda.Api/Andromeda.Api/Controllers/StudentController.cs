@@ -125,25 +125,5 @@ namespace Andromeda.Api.Controllers
                 return Conflict(ex.Message);
             }
         }
-        [HttpGet("{id}/discounts")]
-        public async Task<IActionResult> GetDiscounts(int id)
-        {
-            var discounts = await _studentService.GetDiscountsAsync(id);
-            return Ok(discounts);
-        }
-
-        [HttpPost("{id}/discounts/{discountId}")]
-        public async Task<IActionResult> AssignDiscount(int id, int discountId)
-        {
-            await _studentService.AssignDiscountAsync(id, discountId);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}/discounts/{discountId}")]
-        public async Task<IActionResult> RemoveDiscount(int id, int discountId)
-        {
-            await _studentService.RemoveDiscountAsync(id, discountId);
-            return NoContent();
-        }
     }
 }
