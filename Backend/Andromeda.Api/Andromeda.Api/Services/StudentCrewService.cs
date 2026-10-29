@@ -8,12 +8,12 @@ namespace Andromeda.Api.Services
     public class StudentCrewService
     {
         private readonly ApplicationDbContext _context;
-        private readonly ChargeGenerationService _chargeGenerationService;
+        private readonly AutomaticChargeGenerationService _automaticChargeGenerationService;
 
-        public StudentCrewService(ApplicationDbContext context, ChargeGenerationService chargeGenerationService)
+        public StudentCrewService(ApplicationDbContext context, AutomaticChargeGenerationService automaticChargeGenerationService)
         {
             _context = context;
-            _chargeGenerationService = chargeGenerationService;
+            _automaticChargeGenerationService = automaticChargeGenerationService;
         }
 
 
@@ -48,6 +48,9 @@ namespace Andromeda.Api.Services
 
             _context.StudentCrew.Add(studentCrew);
             await _context.SaveChangesAsync();
+
+            await _automaticChargeGenerationService.GenerateCrewChargeIfMissingAsync(studentCrew.Id);
+
 
             return MapToResponse(studentCrew);
         }
