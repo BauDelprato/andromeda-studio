@@ -11,10 +11,6 @@ export default function Crews() {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const handleEdit = (id: number) => {
-    console.log("Navegar a edición de categoría:", id);
-  };
-
   const handleOpenCategory = (id: number) => {
     navigate(`/crews/${id}`);
   };
@@ -51,7 +47,6 @@ export default function Crews() {
               <CategoryCard 
                 key={category.id} 
                 category={category} 
-                onEdit={handleEdit}
                 onClick={handleOpenCategory}
               />
             ))}
@@ -66,7 +61,6 @@ export default function Crews() {
                 <CategoryCard 
                   key={category.id} 
                   category={category} 
-                  onEdit={handleEdit}
                   onClick={handleOpenCategory}
                 />
               ))}

@@ -3,11 +3,10 @@ import styles from "./CategoryCard.module.css";
 
 interface CategoryCardProps {
   category: CrewCategory;
-  onEdit: (id: number) => void;
   onClick: (id: number) => void;
 }
 
-export function CategoryCard({ category, onEdit, onClick }: CategoryCardProps) {
+export function CategoryCard({ category, onClick }: CategoryCardProps) {
   const isMain = category.type === "main";
 
   return (

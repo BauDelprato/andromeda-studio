@@ -1,0 +1,115 @@
+.ticket {
+  position: sticky;
+  top: 22px;
+  width: 100%;
+  padding: 24px 22px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #efedf2;
+  color: var(--color-text);
+  box-shadow: var(--shadow-md);
+}
+
+.ticketHead {
+  padding-bottom: 17px;
+}
+
+.kicker {
+  color: var(--color-primary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.ticketHead h2 {
+  margin: 9px 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.ticketHead p {
+  margin: 4px 0;
+  font-size: 12px;
+}
+
+.ticketHead small {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.rule {
+  height: 1px;
+  background: #c9c3ce;
+}
+
+.detailHead {
+  padding: 16px 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 12px;
+}
+
+.line > div {
+  display: grid;
+  gap: 3px;
+}
+
+.line strong {
+  font-weight: 500;
+}
+
+.line small {
+  color: var(--color-text-muted);
+  font-size: 10px;
+}
+
+.line b {
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.empty {
+  padding: 10px 0 20px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.bottom {
+  display: grid;
+  gap: 9px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #c9c3ce;
+}
+
+.totalLine,
+.grandTotal {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.totalLine b {
+  font-weight: 600;
+}
+
+.grandTotal {
+  margin-top: 9px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .ticket {
+    position: static;
+  }
+}

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { SearchBar } from "@/components/searchbar/Searchbar";
 import { StatCard } from "@/components/statcard/Statcard";
 import { Table } from "@/components/table/Table";
@@ -101,6 +102,7 @@ function Payments() {
             <h2>Pagos</h2>
             <p>Seguimiento de cargos y pagos de los alumnos.</p>
           </div>
+          <Link className={styles.registerButton} to="/payments/register">Registrar pago</Link>
         </header>
 
         <PaymentPeriodFilter
