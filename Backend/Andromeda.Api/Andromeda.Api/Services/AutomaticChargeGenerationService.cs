@@ -122,51 +122,37 @@ namespace Andromeda.Api.Services
         }
 
         private async Task GenerateMissingRegistrationChargesAsync(
-            Price price)
+    Price price)
         {
-            var startDate = price.ValidFrom.ToDateTime(
-                TimeOnly.MinValue, DateTimeKind.Utc);
-
-            DateTime? endDate = price.ValidTo?.ToDateTime(
-                TimeOnly.MinValue, DateTimeKind.Utc);
+            var billingPeriod = new DateOnly(
+                price.ValidFrom.Year, 1, 1);
 
             var students = await _context.Students
-                .Where(s =>
-                    s.CreatedAt >= startDate &&
-                    (!endDate.HasValue ||
-                     s.CreatedAt < endDate.Value))
+                .Where(s => s.IsActive)
                 .ToListAsync();
 
             if (students.Count == 0)
                 return;
 
-            var studentIds = students.Select(s => s.Id).ToList();
+            var studentIds = students
+                .Select(s => s.Id)
+                .ToList();
 
             var existingCharges = await _context.Charges
                 .Where(c =>
                     c.Type == ChargeType.Registration &&
-                    studentIds.Contains(c.StudentId) &&
-                    c.BillingPeriod.HasValue)
-                .Select(c => new
-                {
-                    c.StudentId,
-                    BillingPeriod = c.BillingPeriod!.Value
-                })
+                    c.BillingPeriod == billingPeriod &&
+                    studentIds.Contains(c.StudentId))
+                .Select(c => c.StudentId)
                 .ToListAsync();
 
-            var existingKeys = existingCharges
-                .Select(c => (c.StudentId, c.BillingPeriod))
-                .ToHashSet();
+            var existingStudentIds = existingCharges.ToHashSet();
 
             var charges = new List<Charge>();
 
             foreach (var student in students)
             {
-                var billingPeriod = new DateOnly(
-                    student.CreatedAt.Year, 1, 1);
-
-                if (!existingKeys.Add(
-                    (student.Id, billingPeriod)))
+                if (!existingStudentIds.Add(student.Id))
                     continue;
 
                 charges.Add(new Charge
