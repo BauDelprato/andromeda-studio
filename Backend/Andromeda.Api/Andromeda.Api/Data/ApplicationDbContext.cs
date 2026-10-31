@@ -22,6 +22,9 @@ namespace Andromeda.Api.Data
         public DbSet<Discount> Discounts { get; set; } = null!;
         public DbSet<StudentDiscount> StudentDiscounts { get; set; }
         public DbSet<PaymentDiscount> PaymentDiscounts { get; set; }
+        public DbSet<CashRegister> CashRegisters { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -93,6 +96,36 @@ namespace Andromeda.Api.Data
                 .HasForeignKey(c => c.PriceId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Transaction -> CashRegister
+            // Evita eliminar cajas que tengan transacciones asociadas.
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.CashRegister)
+                .WithMany(cr => cr.Transactions)
+                .HasForeignKey(t => t.CashRegisterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Transaction -> Category
+            // Evita eliminar categorías que tengan transacciones asociadas.
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.Category)
+                .WithMany(c => c.Transactions)
+                .HasForeignKey(t => t.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Transaction -> Payment
+            // Cada Payment puede estar asociado a una sola Transaction.
+            // PaymentId es nullable para permitir transacciones sin tener un pago asociado.
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.Payment)
+                .WithOne()
+                .HasForeignKey<Transaction>(t => t.PaymentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Una sola caja por fecha.
+            modelBuilder.Entity<CashRegister>()
+                .HasIndex(cr => cr.Date)
+                .IsUnique();
+
             // Configuración monetaria.
             modelBuilder.Entity<Charge>()
                 .Property(c => c.Amount)
@@ -108,6 +141,18 @@ namespace Andromeda.Api.Data
 
             modelBuilder.Entity<Price>()
                 .Property(p => p.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<CashRegister>()
+                .Property(cr => cr.OpeningBalance)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<CashRegister>()
+                .Property(cr => cr.ClosingBalance)
                 .HasPrecision(18, 2);
         }
     }
