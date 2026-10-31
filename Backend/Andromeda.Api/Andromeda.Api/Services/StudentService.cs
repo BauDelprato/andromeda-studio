@@ -9,14 +9,12 @@ namespace Andromeda.Api.Services
     public class StudentService
     {
         private readonly ApplicationDbContext _context;
-        private readonly ChargeGenerationService _chargeGenerationService;
+        private readonly AutomaticChargeGenerationService _automaticChargeGenerationService;
 
-        public StudentService(
-            ApplicationDbContext context,
-            ChargeGenerationService chargeGenerationService)
+        public StudentService( ApplicationDbContext context, AutomaticChargeGenerationService automaticChargeGenerationService)
         {
             _context = context;
-            _chargeGenerationService = chargeGenerationService;
+            _automaticChargeGenerationService = automaticChargeGenerationService;
         }
 
         public async Task<List<StudentResponse>> GetAllAsync()
@@ -182,10 +180,8 @@ namespace Andromeda.Api.Services
                 1,
                 1);
 
-            await _chargeGenerationService
-                .GenerateRegistrationChargeAsync(
-                    student.Id,
-                    billingPeriod);
+            await _automaticChargeGenerationService
+                .GenerateRegistrationChargeIfMissingAsync(student.Id);
 
             return MapToResponse(student);
         }

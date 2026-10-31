@@ -8,10 +8,11 @@ namespace Andromeda.Api.Services
     public class PriceService
     {
         private readonly ApplicationDbContext _context;
-
-        public PriceService(ApplicationDbContext context)
+        private readonly AutomaticChargeGenerationService _automaticChargeGenerationService;
+        public PriceService(ApplicationDbContext context, AutomaticChargeGenerationService automaticChargeGenerationService)
         {
             _context = context;
+            _automaticChargeGenerationService = automaticChargeGenerationService;
         }
 
         public async Task<List<PriceResponse>> GetAllAsync()
@@ -87,6 +88,8 @@ namespace Andromeda.Api.Services
             _context.Prices.Add(priceToCreate);
 
             await _context.SaveChangesAsync();
+
+            await _automaticChargeGenerationService.GenerateMissingChargesForPriceAsync(priceToCreate);
 
             return MapToResponse(priceToCreate);
         }
