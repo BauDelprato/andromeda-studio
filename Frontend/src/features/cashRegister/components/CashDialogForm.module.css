@@ -1,0 +1,92 @@
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: 10px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+  font-weight: 400;
+}
+
+.typePicker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.typeOption {
+  padding: 10px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.typeOptionActive {
+  border-color: #22033a;
+  background: #22033a;
+  color: #fff;
+}
+
+.hint {
+  margin: 0;
+  color: #757575;
+  font-size: 0.85rem;
+}
+
+.error {
+  margin: 0;
+  color: #b20000;
+  font-size: 0.85rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.secondary,
+.primary,
+.danger {
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.secondary {
+  border-color: #d9d9d9;
+  background: #fff;
+}
+
+.primary {
+  background: #6b5580;
+  color: #fff;
+}
+
+.danger {
+  background: #b20000;
+  color: #fff;
+}
+
+.primary:disabled,
+.danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

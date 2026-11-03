@@ -1,0 +1,157 @@
+/* page */
+.screen {
+  display: grid;
+  gap: 24px;
+  padding: 24px 32px;
+  background: #f4f6f8;
+}
+
+.pageHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.titleGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 48px;
+}
+
+.titleGroup h2,
+.titleGroup p,
+.recentSection h3 {
+  margin: 0;
+}
+
+.titleGroup h2 {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.titleGroup p {
+  font-size: 1.2rem;
+  text-transform: capitalize;
+}
+
+.statusBadge {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #f3edf7;
+  color: #49365a;
+  font-weight: 600;
+}
+
+.dataNotice {
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid #ded5e5;
+  border-radius: 8px;
+  background: #f8f5fa;
+  color: #49365a;
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 24px;
+  align-items: start;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.actions {
+  display: grid;
+  gap: 12px;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border: 1px solid #22033a;
+  border-radius: 8px;
+  background: #6b5580;
+  color: #fff;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.actionButton:disabled,
+.disabledLink {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* table */
+.recentSection {
+  display: grid;
+  gap: 16px;
+}
+
+.recentSection h3 {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filters > :first-child {
+  flex: 1 1 280px;
+}
+
+.typeFilter select {
+  min-width: 180px;
+  padding: 10px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+}
+
+.tableScroller {
+  overflow-x: auto;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* responsive */
+@media (max-width: 640px) {
+  .screen {
+    padding: 16px;
+  }
+
+  .topGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+}
