@@ -121,10 +121,10 @@ namespace Andromeda.Api.Data
                 .HasForeignKey<Transaction>(t => t.PaymentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Una sola caja por fecha.
-            modelBuilder.Entity<CashRegister>()
-                .HasIndex(cr => cr.Date)
-                .IsUnique();
+            // Una sola caja por fecha. DESCOMENTAR CUANDO ESTEMOS EN PRODUCCIÓN
+            //modelBuilder.Entity<CashRegister>()
+            //    .HasIndex(cr => cr.Date)
+            //    .IsUnique();
 
             // Configuración monetaria.
             modelBuilder.Entity<Charge>()

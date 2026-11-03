@@ -49,9 +49,6 @@ namespace Andromeda.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Date")
-                        .IsUnique();
-
                     b.ToTable("CashRegisters");
                 });
 

@@ -9,10 +9,12 @@ namespace Andromeda.Api.Services
     public class ChargePaymentService
     {
         private readonly ApplicationDbContext _context;
+        private readonly PaymentService _paymentService;
 
-        public ChargePaymentService(ApplicationDbContext context)
+        public ChargePaymentService(ApplicationDbContext context, PaymentService paymentService)
         {
             _context = context;
+            _paymentService = paymentService;
         }
 
         public async Task<PaymentResponse> CreateAsync(CreatePaymentRequest request)
@@ -120,20 +122,7 @@ namespace Andromeda.Api.Services
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            var payment = new Payment
-            {
-                StudentId = request.StudentId,
-                Amount = request.Amount,
-                DiscountAmount = request.DiscountAmount,
-                Date = request.Date,
-                Method = request.Method,
-                Notes = request.Notes,
-                TransactionReference = request.TransactionReference,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.Payments.Add(payment);
-            await _context.SaveChangesAsync();
+            var payment = await _paymentService.CreateFromChargePaymentAsync(request);
 
             if (discountsToApply.Any())
             {
@@ -149,14 +138,14 @@ namespace Andromeda.Api.Services
                 await _context.SaveChangesAsync();
             }
 
-            await CreateAsync(payment, request);
+            await CreateChargePaymentAsync(payment, request);
 
             await transaction.CommitAsync();
 
             return MapToResponse(payment);
         }
 
-        public async Task CreateAsync(Payment payment, CreatePaymentRequest request)
+        public async Task CreateChargePaymentAsync(Payment payment, CreatePaymentRequest request)
         {
             var duplicateChargeId = request.Charges
                 .GroupBy(item => item.ChargeId)
