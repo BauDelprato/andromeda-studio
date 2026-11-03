@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/Button/Button";
 import { SearchBar } from "@/components/searchbar/Searchbar";
 import { StatCard } from "@/components/statcard/Statcard";
 import { Table } from "@/components/table/Table";
@@ -17,6 +19,7 @@ import styles from "./Payments.module.css";
 const currentDate = new Date();
 
 function Payments() {
+  const navigate = useNavigate();
   const { charges, students, crews, studentCrews, isLoading, error, reload } = usePaymentDashboard();
   const [month, setMonth] = useState(String(currentDate.getMonth()));
   const [year, setYear] = useState(String(currentDate.getFullYear()));
@@ -92,6 +95,14 @@ function Payments() {
     { header: "Fecha", render: (row) => formatBillingPeriod(getChargeBillingDate(row.charge)) },
     { header: "Crew", render: (row) => row.crewName || "—" },
     { header: "Estado", render: (row) => <PaymentStatusBadge status={row.charge.status} /> },
+    {
+      header: "",
+      render: (row) => (
+        <Button onClick={() => navigate(`/students/${row.studentId}/payments`)}>
+          Historial
+        </Button>
+      )
+    }
   ];
 
   return (

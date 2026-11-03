@@ -4,7 +4,7 @@ import { Table } from "@/components/table/Table";
 import type { Student } from "@/features/students/types/student";
 import { useStudentSearch } from "@/features/students/hooks/useStudentSearch";
 import { useStudents } from "@/features/students/hooks/useStudents";
-import { studentTableColumns } from "@/features/students/constants/studentTableColumns";
+import { getStudentTableColumns } from "../constants/studentTableColumns";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./Students.module.css";
@@ -70,7 +70,7 @@ function Students() {
 
         <Table<Student>
           data={filteredStudents}
-          columns={studentTableColumns}
+          columns={getStudentTableColumns(navigate)}
           isLoading={isLoading}
           error={error}
           onRetry={reload}
