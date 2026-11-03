@@ -1,4 +1,4 @@
-import type { Payment, PaymentMethod } from "@/features/payments/types/payment";
+import type { PaymentMethod } from "@/features/payments/types/payment";
 
 export type { PaymentMethod };
 
@@ -7,25 +7,41 @@ export type MovementType = 0 | 1;
 export interface CashCategory {
   id: number;
   name: string;
-  type: MovementType;
+  description: string | null;
+  systemCode: string | null;
+  isActive: boolean;
+  createdAt: string;
 }
 
 export interface CashMovement {
   id: number;
-  date: string;
-  type: MovementType;
+  cashRegisterId: number;
   categoryId: number;
-  reason: string;
-  method: PaymentMethod;
+  categoryName: string;
+  paymentId: number | null;
   amount: number;
+  type: MovementType;
+  method: PaymentMethod;
+  createdAt: string;
   notes: string | null;
-  transactionReference: string | null;
+}
+
+export interface CashRegister {
+  id: number;
+  date: string;
+  openedAt: string;
+  closedAt: string | null;
+  openingBalance: number;
+  closingBalance: number | null;
 }
 
 export interface CashSession {
+  id: number | null;
+  date: string | null;
   isOpen: boolean;
   openedAt: string | null;
   openingAmount: number;
+  closingAmount: number | null;
 }
 
 export interface CashSummary {
@@ -35,23 +51,27 @@ export interface CashSummary {
 }
 
 export interface CreateCashMovementRequest {
-  date: string;
   type: MovementType;
   categoryId: number;
-  reason: string;
   method: PaymentMethod;
   amount: number;
   notes?: string | null;
-  transactionReference?: string | null;
 }
 
 export interface CreateCashCategoryRequest {
   name: string;
-  type: MovementType;
+  description?: string | null;
+}
+
+export interface UpdateCashMovementRequest {
+  categoryId?: number;
+  amount?: number;
+  type?: MovementType;
+  method?: PaymentMethod;
+  notes?: string | null;
 }
 
 export interface CashMovementRow {
   id: number;
-  payment: Payment;
-  studentName: string;
+  movement: CashMovement;
 }

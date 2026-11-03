@@ -12,7 +12,7 @@ const cashLongDateFormatter = new Intl.DateTimeFormat("es-AR", {
 });
 
 export function formatCashDate(value: string) {
-  const date = new Date(value);
+  const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00` : value);
   return Number.isNaN(date.getTime()) ? "Sin definir" : cashDateFormatter.format(date);
 }
 

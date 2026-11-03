@@ -1,23 +1,32 @@
 import { useState, type FormEvent } from "react";
 import { PaymentActionDialog } from "@/features/payments/components/PaymentActionDialog";
-import { MOVEMENT_TYPE_LABELS } from "../constants/cashRegisterOptions";
-import type { CreateCashCategoryRequest, MovementType } from "../types/cashRegister";
+import type { CreateCashCategoryRequest } from "../types/cashRegister";
 import styles from "./CashDialogForm.module.css";
 
 interface CashCategoryDialogProps {
   onClose: () => void;
-  onSubmit: (request: CreateCashCategoryRequest) => void;
+  onSubmit: (request: CreateCashCategoryRequest) => Promise<void>;
 }
 
 export function CashCategoryDialog({ onClose, onSubmit }: CashCategoryDialogProps) {
   const [name, setName] = useState("");
-  const [type, setType] = useState<MovementType>(0);
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!name.trim()) return;
-    onSubmit({ name: name.trim(), type });
-    onClose();
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await onSubmit({ name: name.trim(), description: description.trim() || null });
+      onClose();
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "No se pudo crear la categoría.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -27,22 +36,16 @@ export function CashCategoryDialog({ onClose, onSubmit }: CashCategoryDialogProp
           <span>Nombre de la categoría</span>
           <input required maxLength={40} value={name} onChange={(event) => setName(event.target.value)} />
         </label>
-        <div className={styles.typePicker} role="group" aria-label="Tipo de categoría">
-          {([0, 1] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={type === value}
-              className={`${styles.typeOption} ${type === value ? styles.typeOptionActive : ""}`}
-              onClick={() => setType(value)}
-            >
-              {MOVEMENT_TYPE_LABELS[value]}
-            </button>
-          ))}
-        </div>
+        <label className={styles.field}>
+          <span>Descripción</span>
+          <input maxLength={200} value={description} onChange={(event) => setDescription(event.target.value)} />
+        </label>
+        {error && <p className={styles.error} role="alert">{error}</p>}
         <div className={styles.actions}>
-          <button className={styles.secondary} type="button" onClick={onClose}>Cancelar</button>
-          <button className={styles.primary} type="submit">Crear categoría</button>
+          <button className={styles.secondary} type="button" onClick={onClose} disabled={isSubmitting}>Cancelar</button>
+          <button className={styles.primary} type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Guardando..." : "Crear categoría"}
+          </button>
         </div>
       </form>
     </PaymentActionDialog>

@@ -2,55 +2,51 @@ import { useState, type FormEvent } from "react";
 import { PaymentActionDialog } from "@/features/payments/components/PaymentActionDialog";
 import { CASH_PAYMENT_METHOD_LABELS, MOVEMENT_TYPE_LABELS } from "../constants/cashRegisterOptions";
 import type {
-  CashCategory,
   CreateCashMovementRequest,
   MovementType,
   PaymentMethod,
+  CashCategory,
 } from "../types/cashRegister";
-import { toLocalDateTimeInput } from "../utils/cashRegisterFormatting";
 import styles from "./CashDialogForm.module.css";
 
 interface CashMovementDialogProps {
   categories: CashCategory[];
   onClose: () => void;
-  onSubmit: (request: CreateCashMovementRequest) => void;
+  onSubmit: (request: CreateCashMovementRequest) => Promise<void>;
 }
 
 export function CashMovementDialog({ categories, onClose, onSubmit }: CashMovementDialogProps) {
   const [type, setType] = useState<MovementType>(0);
   const [categoryId, setCategoryId] = useState("");
-  const [date, setDate] = useState(() => toLocalDateTimeInput(new Date()));
-  const [reason, setReason] = useState("");
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState<PaymentMethod>(0);
-  const [reference, setReference] = useState("");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const typeCategories = categories.filter((category) => category.type === type);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function changeType(value: MovementType) {
-    setType(value);
-    setCategoryId("");
-  }
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const parsedAmount = Number(amount);
-    if (!categoryId || !reason.trim() || !(parsedAmount > 0) || !date) {
-      setError("Completá categoría, motivo, fecha y un monto mayor a cero.");
+    if (!categoryId || !Number.isFinite(parsedAmount) || !(parsedAmount > 0)) {
+      setError("Seleccioná una categoría e ingresá un monto mayor a cero.");
       return;
     }
-    onSubmit({
-      date: new Date(date).toISOString(),
-      type,
-      categoryId: Number(categoryId),
-      reason: reason.trim(),
-      method,
-      amount: parsedAmount,
-      notes: notes.trim() || null,
-      transactionReference: method === 1 ? reference.trim() || null : null,
-    });
-    onClose();
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await onSubmit({
+        type,
+        categoryId: Number(categoryId),
+        method,
+        amount: parsedAmount,
+        notes: notes.trim() || null,
+      });
+      onClose();
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "No se pudo registrar el movimiento.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -63,28 +59,24 @@ export function CashMovementDialog({ categories, onClose, onSubmit }: CashMoveme
               type="button"
               aria-pressed={type === value}
               className={`${styles.typeOption} ${type === value ? styles.typeOptionActive : ""}`}
-              onClick={() => changeType(value)}
+              onClick={() => setType(value)}
             >
               {MOVEMENT_TYPE_LABELS[value]}
             </button>
           ))}
         </div>
         <label className={styles.field}>
-          <span>Fecha y hora</span>
-          <input required type="datetime-local" value={date} onChange={(event) => setDate(event.target.value)} />
-        </label>
-        <label className={styles.field}>
           <span>Categoría</span>
           <select required value={categoryId} onChange={(event) => setCategoryId(event.target.value)}>
             <option value="">Seleccioná una categoría</option>
-            {typeCategories.map((category) => (
+            {categories.map((category) => (
               <option key={category.id} value={category.id}>{category.name}</option>
             ))}
           </select>
         </label>
         <label className={styles.field}>
-          <span>Motivo</span>
-          <input required value={reason} onChange={(event) => setReason(event.target.value)} />
+          <span>Notas</span>
+          <input value={notes} onChange={(event) => setNotes(event.target.value)} />
         </label>
         <label className={styles.field}>
           <span>Monto</span>
@@ -98,20 +90,12 @@ export function CashMovementDialog({ categories, onClose, onSubmit }: CashMoveme
             ))}
           </select>
         </label>
-        {method === 1 && (
-          <label className={styles.field}>
-            <span>Referencia de transferencia</span>
-            <input value={reference} onChange={(event) => setReference(event.target.value)} />
-          </label>
-        )}
-        <label className={styles.field}>
-          <span>Notas</span>
-          <textarea rows={3} value={notes} onChange={(event) => setNotes(event.target.value)} />
-        </label>
         {error && <p className={styles.error} role="alert">{error}</p>}
         <div className={styles.actions}>
-          <button className={styles.secondary} type="button" onClick={onClose}>Cancelar</button>
-          <button className={styles.primary} type="submit">Registrar movimiento</button>
+          <button className={styles.secondary} type="button" onClick={onClose} disabled={isSubmitting}>Cancelar</button>
+          <button className={styles.primary} type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Guardando..." : "Registrar movimiento"}
+          </button>
         </div>
       </form>
     </PaymentActionDialog>

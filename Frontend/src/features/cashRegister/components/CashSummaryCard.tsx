@@ -11,7 +11,7 @@ export function CashSummaryCard({ label, amount, isLoading = false }: CashSummar
   return (
     <article className={styles.card}>
       <h3>{label}</h3>
-      <strong>{isLoading ? "…" : amount === null ? "No disponible" : paymentCurrency.format(amount)}</strong>
+      <strong>{isLoading ? "…" : amount === null ? "—" : paymentCurrency.format(amount)}</strong>
     </article>
   );
 }

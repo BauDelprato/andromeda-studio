@@ -1,66 +1,129 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getPayments } from "@/api/paymentApi";
-import { getStudents } from "@/api/studentApi";
-import type { Payment } from "@/features/payments/types/payment";
-import type { Student } from "@/features/students/types/student";
-import type { CashMovementRow } from "../types/cashRegister";
+import { createCashRegister, getCashRegisters, closeCashRegister } from "@/api/cashRegisterApi";
+import { createCategory, getCategories } from "@/api/categoryApi";
+import { createTransaction, getTransactions } from "@/api/transactionApi";
+import type {
+  CashCategory,
+  CashMovement,
+  CashRegister,
+  CashSession,
+  CashSummary,
+  CreateCashCategoryRequest,
+  CreateCashMovementRequest,
+} from "../types/cashRegister";
 
-function getLocalDateKey(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+function getUtcDateKey(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function toSession(register: CashRegister | null): CashSession {
+  return {
+    id: register?.id ?? null,
+    date: register?.date ?? null,
+    isOpen: register !== null && register.closedAt === null,
+    openedAt: register?.openedAt ?? null,
+    openingAmount: register?.openingBalance ?? 0,
+    closingAmount: register?.closingBalance ?? null,
+  };
 }
 
 export function useCashRegister() {
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [students, setStudents] = useState<Student[]>([]);
+  const [session, setSession] = useState<CashSession>(toSession(null));
+  const [movements, setMovements] = useState<CashMovement[]>([]);
+  const [categories, setCategories] = useState<CashCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const today = useMemo(() => getLocalDateKey(new Date()), []);
+  const today = useMemo(() => getUtcDateKey(new Date()), []);
 
   const reload = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const [loadedPayments, loadedStudents] = await Promise.all([getPayments(), getStudents()]);
-      setPayments(loadedPayments);
-      setStudents(loadedStudents);
+      const [registers, loadedCategories] = await Promise.all([getCashRegisters(), getCategories()]);
+      const register =
+        registers.find((item) => item.closedAt === null) ??
+        registers.find((item) => item.date === today) ??
+        null;
+      const loadedMovements = register
+        ? await getTransactions({ cashRegisterId: register.id })
+        : [];
+      setSession(toSession(register));
+      setMovements(loadedMovements);
+      setCategories(loadedCategories.filter((category) => category.isActive));
     } catch {
-      setPayments([]);
-      setStudents([]);
+      setSession(toSession(null));
+      setMovements([]);
+      setCategories([]);
       setError("No se pudo cargar la caja diaria. Verificá la conexión con el backend.");
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [today]);
 
   useEffect(() => {
     void reload();
   }, [reload]);
 
-  const rows = useMemo<CashMovementRow[]>(() => {
-    const studentsById = new Map(students.map((student) => [student.id, student]));
-    return payments
-      .filter((payment) => {
-        const paymentDate = new Date(payment.date);
-        return !Number.isNaN(paymentDate.getTime()) && getLocalDateKey(paymentDate) === today;
-      })
-      .map((payment) => {
-        const student = studentsById.get(payment.studentId);
-        return {
-          id: payment.id,
-          payment,
-          studentName: student ? `${student.firstName} ${student.lastName}`.trim() : `Alumno #${payment.studentId}`,
-        };
-      })
-      .sort((first, second) => second.payment.date.localeCompare(first.payment.date));
-  }, [payments, students, today]);
+  const summary = useMemo<CashSummary>(() => {
+    const income = movements
+      .filter((movement) => movement.type === 0)
+      .reduce((sum, movement) => sum + movement.amount, 0);
+    const expenses = movements
+      .filter((movement) => movement.type === 1)
+      .reduce((sum, movement) => sum + movement.amount, 0);
+    return {
+      income,
+      expenses,
+      balance: session.closingAmount ?? session.openingAmount + income - expenses,
+    };
+  }, [movements, session.closingAmount, session.openingAmount]);
 
-  const income = useMemo(
-    () => rows.reduce((total, row) => total + row.payment.amount, 0),
-    [rows],
-  );
+  async function performMutation(action: () => Promise<unknown>) {
+    setError(null);
+    try {
+      await action();
+      await reload();
+    } catch (mutationError) {
+      setError(mutationError instanceof Error ? mutationError.message : "Ocurrió un error inesperado.");
+      throw mutationError;
+    }
+  }
 
-  return { rows, income, isLoading, error, reload };
+  function openSession() {
+    return performMutation(() => createCashRegister());
+  }
+
+  function closeSession() {
+    const id = session.id;
+    if (id === null || !session.isOpen) {
+      throw new Error("No hay una caja abierta para cerrar.");
+    }
+    return performMutation(() => closeCashRegister(id));
+  }
+
+  function addMovement(request: CreateCashMovementRequest) {
+    if (!session.isOpen) {
+      throw new Error("Abrí la caja antes de registrar movimientos.");
+    }
+    return performMutation(() => createTransaction(request));
+  }
+
+  function addCategory(request: CreateCashCategoryRequest) {
+    return performMutation(() => createCategory(request));
+  }
+
+  return {
+    session,
+    movements,
+    categories,
+    summary,
+    isLoading,
+    error,
+    reload,
+    canOpen: !session.isOpen,
+    openSession,
+    closeSession,
+    addMovement,
+    addCategory,
+  };
 }

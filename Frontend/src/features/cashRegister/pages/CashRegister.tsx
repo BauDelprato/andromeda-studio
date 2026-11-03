@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import { SearchBar } from "@/components/searchbar/Searchbar";
 import { Table } from "@/components/table/Table";
 import type { TableColumn } from "@/components/table/types";
-import { paymentCurrency, formatPaymentDate } from "@/features/payments/utils/paymentFormatters";
+import { paymentCurrency } from "@/features/payments/utils/paymentFormatters";
+import { CashCategoryDialog } from "../components/CashCategoryDialog";
+import { CashMovementDialog } from "../components/CashMovementDialog";
+import { CashSessionDialog } from "../components/CashSessionDialog";
 import { CashSummaryCard } from "../components/CashSummaryCard";
 import {
   CASH_PAYMENT_METHOD_LABELS,
@@ -12,37 +15,52 @@ import {
 } from "../constants/cashRegisterOptions";
 import { useCashRegister } from "../hooks/useCashRegister";
 import type { CashMovementRow, MovementType } from "../types/cashRegister";
-import { formatCashLongDate } from "../utils/cashRegisterFormatting";
+import { formatCashDate, formatCashLongDate } from "../utils/cashRegisterFormatting";
 import styles from "./CashRegister.module.css";
+
+type DialogState = "movement" | "category" | "open" | "close" | null;
 
 function CashRegister() {
   const cash = useCashRegister();
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<MovementType | "all">("all");
+  const [dialog, setDialog] = useState<DialogState>(null);
 
-  const normalizedSearch = search.trim().toLocaleLowerCase("es-AR");
-  const filteredRows = useMemo(
-    () => cash.rows.filter((row) => {
-      const matchesSearch = [
-          row.studentName,
-          row.payment.notes ?? "",
-          row.payment.transactionReference ?? "",
-          String(row.payment.id),
-        ].some((value) => value.toLocaleLowerCase("es-AR").includes(normalizedSearch));
-      const matchesType = typeFilter === "all" || typeFilter === 0;
-      return matchesSearch && matchesType;
-    }),
-    [cash.rows, normalizedSearch, typeFilter],
+  const rows = useMemo<CashMovementRow[]>(
+    () => cash.movements.map((movement) => ({ id: movement.id, movement })),
+    [cash.movements],
   );
+  const normalizedSearch = search.trim().toLocaleLowerCase("es-AR");
+  const filteredRows = rows.filter((row) => {
+    const matchesSearch = [
+      row.movement.categoryName,
+      row.movement.notes ?? "",
+      String(row.movement.id),
+      row.movement.paymentId === null ? "" : String(row.movement.paymentId),
+    ].some((value) => value.toLocaleLowerCase("es-AR").includes(normalizedSearch));
+    const matchesType = typeFilter === "all" || row.movement.type === typeFilter;
+    return matchesSearch && matchesType;
+  });
 
   const columns: TableColumn<CashMovementRow>[] = [
-    { header: "Fecha", render: (row) => formatPaymentDate(row.payment.date) },
-    { header: "Tipo", render: () => MOVEMENT_TYPE_LABELS[0] },
-    { header: "Categoría", render: () => "No disponible" },
-    { header: "Motivo", render: (row) => row.payment.notes || row.studentName || "—" },
-    { header: "Método", render: (row) => CASH_PAYMENT_METHOD_LABELS[row.payment.method] },
-    { header: "Monto", render: (row) => paymentCurrency.format(row.payment.amount) },
+    { header: "Fecha", render: (row) => formatCashDate(row.movement.createdAt) },
+    { header: "Tipo", render: (row) => MOVEMENT_TYPE_LABELS[row.movement.type] },
+    { header: "Categoría", render: (row) => row.movement.categoryName },
+    {
+      header: "Motivo",
+      render: (row) =>
+        row.movement.notes ??
+        (row.movement.paymentId === null ? "—" : `Pago #${row.movement.paymentId}`),
+    },
+    { header: "Método", render: (row) => CASH_PAYMENT_METHOD_LABELS[row.movement.method] },
+    {
+      header: "Monto",
+      render: (row) =>
+        (row.movement.type === 1 ? "−" : "") + paymentCurrency.format(row.movement.amount),
+    },
   ];
+
+  const hasRegister = cash.session.id !== null;
 
   return (
     <section className={styles.screen}>
@@ -51,42 +69,64 @@ function CashRegister() {
           <h2>Caja diaria</h2>
           <p>{formatCashLongDate(new Date())}</p>
         </div>
-        <span className={styles.statusBadge}>Acciones no disponibles</span>
+        {cash.session.isOpen ? (
+          <span className={styles.statusBadge}>Caja abierta</span>
+        ) : (
+          <button
+            className={styles.actionButton}
+            type="button"
+            disabled={cash.isLoading || !cash.canOpen}
+            title={!cash.canOpen ? "La caja de hoy ya fue cerrada" : undefined}
+            onClick={() => setDialog("open")}
+          >
+            Abrir caja
+          </button>
+        )}
       </header>
-
-      <p className={styles.dataNotice} role="note">
-        La gestión de caja todavía no está disponible. Se muestran los pagos reales registrados hoy;
-        abrir o cerrar la caja, registrar movimientos y administrar categorías se habilitará cuando el
-        backend tenga esos endpoints.
-      </p>
 
       <div className={styles.topGrid}>
         <section className={styles.summary} aria-label="Resumen de caja">
-        <CashSummaryCard
-          label="Ingresos totales:"
-          amount={cash.error ? null : cash.income}
-          isLoading={cash.isLoading}
-        />
-          <CashSummaryCard label="Egresos totales:" amount={null} isLoading={cash.isLoading} />
-          <CashSummaryCard label="Resumen de caja:" amount={null} isLoading={cash.isLoading} />
+          <CashSummaryCard
+            label="Resumen de caja:"
+            amount={hasRegister ? cash.summary.balance : null}
+            isLoading={cash.isLoading}
+          />
+          <CashSummaryCard
+            label="Ingresos totales:"
+            amount={hasRegister ? cash.summary.income : null}
+            isLoading={cash.isLoading}
+          />
+          <CashSummaryCard
+            label="Egresos totales:"
+            amount={hasRegister ? cash.summary.expenses : null}
+            isLoading={cash.isLoading}
+          />
         </section>
         <div className={styles.actions}>
-          <button className={styles.actionButton} type="button" disabled title="Todavía no disponible">
-            Abrir caja
-          </button>
-          <button className={styles.actionButton} type="button" disabled title="Todavía no disponible">
+          <button
+            className={styles.actionButton}
+            type="button"
+            disabled={!cash.session.isOpen || cash.categories.length === 0}
+            title={
+              !cash.session.isOpen
+                ? "Abrí la caja para registrar movimientos"
+                : cash.categories.length === 0
+                  ? "Creá una categoría para registrar movimientos"
+                  : undefined
+            }
+            onClick={() => setDialog("movement")}
+          >
             + Registrar movimiento
           </button>
-          <button className={styles.actionButton} type="button" disabled title="Todavía no disponible">
+          <button
+            className={styles.actionButton}
+            type="button"
+            disabled={cash.isLoading}
+            onClick={() => setDialog("category")}
+          >
             + Añadir nueva categoría
           </button>
-          <Link
-            className={`${styles.actionButton} ${styles.disabledLink}`}
-            to="/cash-register/history"
-            aria-disabled="true"
-            onClick={(event) => event.preventDefault()}
-            title="Todavía no disponible"
-          >
+          <Link className={styles.actionButton} to="/cash-register/history">
             Ver historial
           </Link>
         </div>
@@ -125,7 +165,34 @@ function CashRegister() {
             }
           />
         </div>
+        {cash.session.isOpen && (
+          <div className={styles.closeRow}>
+            <button className={styles.closeButton} type="button" onClick={() => setDialog("close")}>
+              Cerrar caja
+            </button>
+          </div>
+        )}
       </section>
+
+      {dialog === "movement" && (
+        <CashMovementDialog
+          categories={cash.categories}
+          onClose={() => setDialog(null)}
+          onSubmit={cash.addMovement}
+        />
+      )}
+      {dialog === "category" && (
+        <CashCategoryDialog onClose={() => setDialog(null)} onSubmit={cash.addCategory} />
+      )}
+      {(dialog === "open" || dialog === "close") && (
+        <CashSessionDialog
+          mode={dialog}
+          balance={cash.summary.balance}
+          onClose={() => setDialog(null)}
+          onOpenSession={cash.openSession}
+          onCloseSession={cash.closeSession}
+        />
+      )}
     </section>
   );
 }

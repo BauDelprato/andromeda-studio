@@ -7,42 +7,49 @@ interface CashSessionDialogProps {
   mode: "open" | "close";
   balance: number;
   onClose: () => void;
-  onOpenSession: (openingAmount: number) => void;
-  onCloseSession: () => void;
+  onOpenSession: () => Promise<void>;
+  onCloseSession: () => Promise<void>;
 }
 
 export function CashSessionDialog({ mode, balance, onClose, onOpenSession, onCloseSession }: CashSessionDialogProps) {
-  const [openingAmount, setOpeningAmount] = useState("0");
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (mode === "open") {
-      const amount = Number(openingAmount);
-      if (!(amount >= 0)) return;
-      onOpenSession(amount);
-    } else {
-      onCloseSession();
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      if (mode === "open") {
+        await onOpenSession();
+      } else {
+        await onCloseSession();
+      }
+      onClose();
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "No se pudo actualizar la caja.");
+    } finally {
+      setIsSubmitting(false);
     }
-    onClose();
   }
 
   return (
     <PaymentActionDialog title={mode === "open" ? "Abrir caja" : "Cerrar caja"} onClose={onClose}>
       <form className={styles.form} onSubmit={handleSubmit}>
         {mode === "open" ? (
-          <label className={styles.field}>
-            <span>Monto inicial en caja</span>
-            <input required type="number" min="0" step="0.01" value={openingAmount} onChange={(event) => setOpeningAmount(event.target.value)} />
-          </label>
+          <p className={styles.hint}>
+            El saldo inicial se calcula automáticamente a partir del cierre de la caja anterior.
+          </p>
         ) : (
           <p className={styles.hint}>
             Vas a cerrar la caja con un balance de <strong>{paymentCurrency.format(balance)}</strong>. No se podrán registrar más movimientos hasta volver a abrirla.
           </p>
         )}
+        {error && <p className={styles.error} role="alert">{error}</p>}
         <div className={styles.actions}>
-          <button className={styles.secondary} type="button" onClick={onClose}>Cancelar</button>
-          <button className={mode === "open" ? styles.primary : styles.danger} type="submit">
-            {mode === "open" ? "Abrir caja" : "Cerrar caja"}
+          <button className={styles.secondary} type="button" onClick={onClose} disabled={isSubmitting}>Cancelar</button>
+          <button className={mode === "open" ? styles.primary : styles.danger} type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Guardando..." : mode === "open" ? "Abrir caja" : "Cerrar caja"}
           </button>
         </div>
       </form>
