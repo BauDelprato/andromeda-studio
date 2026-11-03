@@ -1,3 +1,4 @@
+using Andromeda.Api.Constants;
 using Andromeda.Api.Data;
 using Andromeda.Api.DTOs.Payments;
 using Andromeda.Api.Models;
@@ -25,15 +26,73 @@ namespace Andromeda.Api.Services
                 .ToList();
         }
 
-        public async Task<UpdatePaymentResponse?> UpdateAsync(
-            int id,
-            UpdatePaymentRequest request)
+        public async Task<Payment> CreateFromChargePaymentAsync( CreatePaymentRequest request)
+        {
+            var cashRegister = await _context.CashRegisters
+                .SingleOrDefaultAsync(cr => cr.ClosedAt == null);
+
+            if (cashRegister == null)
+            {
+                throw new InvalidOperationException(
+                    "No existe una caja abierta para registrar el pago.");
+            }
+
+            var category = await _context.Categories
+                .FirstOrDefaultAsync(c =>
+                    c.SystemCode == CategorySystemCodes.AcademyIncome &&
+                    c.IsActive);
+
+            if (category == null)
+            {
+                throw new InvalidOperationException(
+                    "No existe una categoría activa para los ingresos automáticos de la academia.");
+            }
+
+            var now = DateTime.UtcNow;
+
+            var payment = new Payment
+            {
+                StudentId = request.StudentId,
+                Amount = request.Amount,
+                DiscountAmount = request.DiscountAmount,
+                Date = request.Date,
+                Method = request.Method,
+                Notes = request.Notes,
+                TransactionReference = request.TransactionReference,
+                CreatedAt = now
+            };
+
+            var transaction = new Transaction
+            {
+                CashRegisterId = cashRegister.Id,
+                CategoryId = category.Id,
+                Payment = payment,
+                Amount = payment.Amount,
+                Type = TransactionType.Income,
+                Method = payment.Method,
+                Notes = payment.Notes,
+                CreatedAt = now
+            };
+
+            _context.Payments.Add(payment);
+            _context.Transactions.Add(transaction);
+
+            await _context.SaveChangesAsync();
+
+            return payment;
+        }
+
+        public async Task<UpdatePaymentResponse?> UpdateAsync( int id, UpdatePaymentRequest request)
         {
             var payment = await _context.Payments.FindAsync(id);
+
             if (payment == null)
             {
                 return null;
             }
+
+            var transaction = await _context.Transactions
+                .FirstOrDefaultAsync(t => t.PaymentId == id);
 
             if (request.Method.HasValue)
             {
@@ -43,11 +102,25 @@ namespace Andromeda.Api.Services
                 }
 
                 payment.Method = request.Method.Value;
+
+                if (transaction != null)
+                {
+                    transaction.Method = request.Method.Value;
+                }
             }
 
             if (request.Notes != null)
             {
-                payment.Notes = request.Notes;
+                var notes = string.IsNullOrWhiteSpace(request.Notes)
+                    ? null
+                    : request.Notes.Trim();
+
+                payment.Notes = notes;
+
+                if (transaction != null)
+                {
+                    transaction.Notes = notes;
+                }
             }
 
             if (request.TransactionReference != null)
