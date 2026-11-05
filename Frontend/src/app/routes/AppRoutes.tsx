@@ -6,6 +6,7 @@ import StudentRoutes from "@/features/students/routes/StudentRoutes";
 import CrewRoutes from "@/features/crews/routes/CrewRoutes";
 import RegistrationRoutes from "@/features/registrations/routes/RegistrationRoutes";
 import PaymentRoutes from "@/features/payments/routes/PaymentRoutes";
+import CashRegisterRoutes from "@/features/cashRegister/routes/cashRegisterRoutes";
 
 function AppRoutes() {
   return (
@@ -17,6 +18,7 @@ function AppRoutes() {
         <Route path="crews/*" element={<CrewRoutes />} /> 
         <Route path="registrations/*" element={<RegistrationRoutes />} />
         <Route path="payments/*" element={<PaymentRoutes />} />
+        <Route path="cash-register/*" element={<CashRegisterRoutes />} />
       </Route>
     </Routes>
   );

@@ -4,6 +4,7 @@ import {
   LuLayoutDashboard,
   LuUsers,
   LuCreditCard,
+  LuWallet,
   LuChevronLeft,
   LuChevronRight,
   LuLogOut,
@@ -26,7 +27,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Grupos", path: "/crews", icon: LuUsers },
   /*{ label: "Inscripciones", path: "/registrations", icon: LuNotebookPen },*/
   { label: "Pagos", path: "/payments", icon: LuCreditCard },
-  
+  { label: "Caja", path: "/cash-register", icon: LuWallet },
 ];
 
 function Sidebar() {

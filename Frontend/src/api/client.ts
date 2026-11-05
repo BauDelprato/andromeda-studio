@@ -18,3 +18,20 @@ export async function apiFetch<T>(
 
   return response.json();
 }
+
+export async function apiFetchVoid(
+  endpoint: string,
+  options?: RequestInit
+): Promise<void> {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+    ...options,
+  });
+
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+}
