@@ -12,4 +12,5 @@ export interface Charge {
   createdAt: string;
   studentCrewId: number | null;
   priceId: number | null;
+  crewName?: string;
 }

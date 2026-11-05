@@ -59,11 +59,7 @@ export default function CrewProfile() {
       header: "", 
       render: (student) => (
         <div className={styles.actionWrapper}>
-          <Button 
-            className={styles.historyButton} 
-            disabled
-            title="Próximamente"
-          >
+          <Button onClick={() => navigate(`/students/${student.id}/payments`)}>
             Historial de pagos
           </Button>
           <Button 

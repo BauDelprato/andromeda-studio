@@ -1,0 +1,76 @@
+.container {
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+  margin: 24px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+.subtitle {
+  color: #666;
+  font-size: 1rem;
+  font-weight: normal;
+  margin: 0 0 8px 0;
+}
+.title {
+  font-size: 2rem;
+  margin: 0;
+  color: #1a1a1a;
+}
+.overdueAlert {
+  background-color: #e5989b;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.viewLink {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+.filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+.selects {
+  display: flex;
+  gap: 12px;
+}
+.dropdown {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+}
+.searchWrapper {
+  width: 300px;
+}
+.tableWrapper {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.receiptBtn {
+  background-color: #6b5b95;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+.colDate { width: 15%; }
+.colAmount { width: 15%; }
+.colCrew { width: 20%; }
+.colMonth { width: 20%; }
+.colDiscount { width: 15%; }
+.colAction { width: 15%; text-align: right; }
