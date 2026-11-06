@@ -1,71 +1,92 @@
 .container {
   padding: 24px;
-  background: white;
-  border-radius: 8px;
-  margin: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
 }
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 32px;
+  margin-bottom: 22px;
 }
+
 .subtitle {
-  color: #666;
-  font-size: 1rem;
-  font-weight: normal;
-  margin: 0 0 8px 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
 }
+
 .title {
-  font-size: 2rem;
+  font-size: 22px;
+  font-weight: 700;
   margin: 0;
-  color: #1a1a1a;
+  color: var(--color-text);
+  letter-spacing: -0.4px;
 }
+
 .overdueAlert {
-  background-color: #e5989b;
-  color: #fff;
-  padding: 12px 24px;
-  border-radius: 8px;
+  background-color: #dc9397;
+  color: #291c22;
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 500;
 }
+
 .viewLink {
   background: none;
   border: none;
-  color: white;
+  color: inherit;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 13px;
 }
+
 .filters {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 24px;
-  gap: 16px;
+  margin-bottom: 18px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
+
 .selects {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
+
 .dropdown {
-  padding: 8px 32px 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: white;
+  padding: 8px 28px 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: 13px;
+  color: var(--color-text);
 }
+
 .searchWrapper {
-  width: 300px;
+  width: 280px;
 }
+
 .tableWrapper {
-  border: 1px solid #eee;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
+
 .receiptBtn {
   background-color: #6b5b95;
   padding: 6px 12px;
-  font-size: 0.85rem;
+  font-size: 12px;
 }
 
 .colDate { width: 15%; }

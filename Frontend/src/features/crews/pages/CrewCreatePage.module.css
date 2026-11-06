@@ -1,20 +1,15 @@
 .container {
-  padding: 32px;
+  width: 100%;
 }
 
 .header {
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .title {
   margin: 0;
-  color: var(--color-text, #1a1426);
-  font-size: 28px;
-  font-weight: 500;
-}
-
-@media (max-width: 640px) {
-  .container {
-    padding: 24px 16px;
-  }
+  color: var(--color-text);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
 }

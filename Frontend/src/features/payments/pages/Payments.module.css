@@ -1,14 +1,13 @@
 .screen {
   min-height: 100%;
-  padding: 24px 28px 36px;
+  width: 100%;
 }
 
 .content {
   display: flex;
-  width: min(100%, 1280px);
+  width: 100%;
   flex-direction: column;
   gap: 22px;
-  margin: 0 auto;
 }
 
 .pageHeader {
@@ -22,7 +21,8 @@
   margin: 0;
   color: var(--color-text);
   font-size: 22px;
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: -0.4px;
 }
 
 .pageHeader p {
@@ -33,47 +33,52 @@
 
 .registerButton {
   display: inline-flex;
-  min-height: 42px;
+  min-height: 38px;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  padding: 0 18px;
   border-radius: var(--radius-md);
   background: var(--color-primary);
   color: white;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   text-decoration: none;
+  box-shadow: 0 2px 6px rgba(99, 29, 130, 0.2);
+  transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 .registerButton:hover {
   background: var(--color-primary-hover);
+  transform: translateY(-1px);
 }
 
 .summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 220px));
-  gap: 24px;
+  grid-template-columns: repeat(3, minmax(0, 240px));
+  gap: 20px;
 }
 
 .overdueNotice {
   display: flex;
-  min-height: 52px;
+  min-height: 46px;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 8px 22px;
+  padding: 8px 20px;
   border-radius: var(--radius-pill);
   color: #291c22;
   background: #dc9397;
-  font-size: 15px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .overdueNotice button {
-  padding: 7px 0 7px 12px;
+  padding: 6px 0 6px 12px;
   border: 0;
   color: inherit;
   background: transparent;
   font: inherit;
+  font-weight: 600;
 }
 
 .overdueNotice button:disabled {
@@ -84,7 +89,7 @@
 .recentSection {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .tableScroller {
@@ -100,7 +105,7 @@
   margin: 0;
   color: var(--color-text);
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .filters {
@@ -115,13 +120,15 @@
 
 .statusFilter select {
   min-width: 150px;
-  min-height: 40px;
-  padding: 7px 12px;
+  min-height: 38px;
+  padding: 6px 12px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-text);
   background: var(--color-surface);
   font: inherit;
+  font-size: 13px;
+  box-shadow: var(--shadow-sm);
 }
 
 .visuallyHidden {
@@ -135,10 +142,6 @@
 }
 
 @media (max-width: 800px) {
-  .screen {
-    padding: 20px 18px 30px;
-  }
-
   .summary {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
@@ -146,10 +149,6 @@
 }
 
 @media (max-width: 560px) {
-  .screen {
-    padding: 18px 14px 24px;
-  }
-
   .pageHeader {
     align-items: stretch;
     flex-direction: column;
@@ -160,7 +159,8 @@
   }
 
   .summary {
-    gap: 8px;
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .summary > * {

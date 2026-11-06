@@ -1,21 +1,23 @@
 .card {
   position: relative;
-  border-radius: 12px;
-  padding: 24px;
-  min-height: 200px;
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  min-height: 140px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-  border: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  border: 1px solid rgba(36, 12, 49, 0.06);
+  box-shadow: var(--shadow-sm);
   text-align: left;
   width: 100%;
 }
 
 .card:hover {
   transform: translateY(-2px);
-  opacity: 0.9;
+  box-shadow: var(--shadow-md);
+  opacity: 0.96;
 }
 
 .mainVariant {
@@ -27,10 +29,10 @@
 }
 
 .title {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #111;
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
 }
 
 .subtitle {
@@ -41,8 +43,8 @@
 
 .editIcon {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 14px;
+  right: 14px;
   background: transparent;
   border: none;
   cursor: pointer;

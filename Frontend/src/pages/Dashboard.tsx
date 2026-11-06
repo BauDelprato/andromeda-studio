@@ -5,6 +5,7 @@ import {
   LuCalendar,
   LuCreditCard,
   LuLayers,
+  LuWallet,
   //LuNotebookPen, //descomentar cuando se agregue la sección de inscripciones
   LuUsers,
 } from "react-icons/lu";
@@ -55,20 +56,20 @@ const SECTION_CARDS: QuickAccessCard[] = [
     path: "/payments",
     icon: LuCreditCard,
   },
-  /*{
-    title: "Cierre de Caja", //cuando esté creado el formulario de caja
+  {
+    title: "Cierre de Caja", 
     description:
       "Registra ingresos y egresos de la caja.",
-    path: "/payments",
-    icon: LuCreditCard,
-  },*/ 
+    path: "/cash-register",
+    icon: LuWallet,
+  }, 
 ];
 
 const QUICK_ACTIONS: QuickActionButton[] = [
   { label: "+ Añadir Alumno", path: "/students/add" },
-  { label: "+ Registrar pago", path: "/payments" },
+  { label: "+ Registrar pago", path: "/payments/register" },
   { label: "+ Nueva inscripción", path: "/crews" },
-  { label: "+ Nueva movimiento de caja" }, //cuando esté credao el formulario de caja
+  { label: "+ Nueva movimiento de caja", path: "/cash-register" }, //cuando esté credao el formulario de caja
 ];
 
 const fullDateFormatter = new Intl.DateTimeFormat("es-AR", {
@@ -144,7 +145,7 @@ function Dashboard() {
 
       <section className={styles.welcomeCard}>
         <div className={styles.welcomeContent}>
-          <h2 className={styles.title}>Bienvenido a Andrómeda Studio</h2>
+          <h2 className={styles.title}>Bienvenido a Andromeda-Studio</h2>
           <p className={styles.subtitle}>
             Panel de control general de la academia de danza. Accede a las
             secciones principales para gestionar alumnos, clases y pagos.

@@ -1,5 +1,4 @@
 .container {
-  padding: 32px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -13,18 +12,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .title {
   margin: 0;
-  color: var(--color-text, #1a1426);
-  font-size: 28px;
-  font-weight: 500;
+  color: var(--color-text);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
 }
 
 .backButton {
   width: auto;
+  padding: 9px 18px;
+  font-size: 13px;
   background-color: #6b5b95;
   color: #ffffff;
   transition: background-color 0.2s ease;
@@ -32,10 +34,4 @@
 
 .backButton:hover {
   background-color: #554877;
-}
-
-@media (max-width: 640px) {
-  .container {
-    padding: 24px 16px;
-  }
 }

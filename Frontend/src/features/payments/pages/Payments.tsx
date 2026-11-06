@@ -21,7 +21,7 @@ const currentDate = new Date();
 function Payments() {
   const navigate = useNavigate();
   const { charges, students, crews, studentCrews, isLoading, error, reload } = usePaymentDashboard();
-  const [month, setMonth] = useState(String(currentDate.getMonth()));
+  const [month, setMonth] = useState("all");
   const [year, setYear] = useState(String(currentDate.getFullYear()));
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<ChargeStatus | "all">("all");
@@ -130,7 +130,7 @@ function Payments() {
           <StatCard label="Atrasados" value={overdueCount} isLoading={isLoading} />
         </section>
 
-        <div className={styles.overdueNotice}>
+        {/*<div className={styles.overdueNotice}>
           <span>
             {overdueCount === 1
               ? "1 estudiante atrasado"
@@ -143,7 +143,7 @@ function Payments() {
           >
             Ver <span aria-hidden="true">→</span>
           </button>
-        </div>
+        </div>*/}
 
         <section className={styles.recentSection}>
           <div className={styles.sectionHeading}>

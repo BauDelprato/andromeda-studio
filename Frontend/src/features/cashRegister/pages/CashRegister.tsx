@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { LuSettings } from "react-icons/lu";
 import { SearchBar } from "@/components/searchbar/Searchbar";
 import { Table } from "@/components/table/Table";
 import type { TableColumn } from "@/components/table/types";
@@ -64,88 +65,114 @@ function CashRegister() {
 
   return (
     <section className={styles.screen}>
+      <div className={styles.topBar}>
+        <h1 className={styles.topBarTitle}>Cajas</h1>
+        <button type="button" className={styles.settingsButton} aria-label="Configuración">
+          <LuSettings size={18} />
+        </button>
+      </div>
+
       <header className={styles.pageHeader}>
         <div className={styles.titleGroup}>
           <h2>Caja diaria</h2>
           <p>{formatCashLongDate(new Date())}</p>
         </div>
-        {cash.session.isOpen ? (
-          <span className={styles.statusBadge}>Caja abierta</span>
-        ) : (
+        <div className={styles.headerActions}>
           <button
-            className={styles.actionButton}
+            className={styles.openButton}
             type="button"
             disabled={cash.isLoading || !cash.canOpen}
-            title={!cash.canOpen ? "La caja de hoy ya fue cerrada" : undefined}
+            title={!cash.canOpen ? "La caja de hoy ya fue cerrada o está abierta" : undefined}
             onClick={() => setDialog("open")}
           >
-            Abrir caja
+            Abrir Caja
           </button>
-        )}
+          <button
+            className={styles.closeButton}
+            type="button"
+            disabled={cash.isLoading || !cash.session.isOpen}
+            title={!cash.session.isOpen ? "No hay una caja abierta para cerrar" : undefined}
+            onClick={() => setDialog("close")}
+          >
+            Cerrar Caja
+          </button>
+        </div>
       </header>
 
-      <div className={styles.topGrid}>
-        <section className={styles.summary} aria-label="Resumen de caja">
-          <CashSummaryCard
-            label="Resumen de caja:"
-            amount={hasRegister ? cash.summary.balance : null}
-            isLoading={cash.isLoading}
-          />
-          <CashSummaryCard
-            label="Ingresos totales:"
-            amount={hasRegister ? cash.summary.income : null}
-            isLoading={cash.isLoading}
-          />
-          <CashSummaryCard
-            label="Egresos totales:"
-            amount={hasRegister ? cash.summary.expenses : null}
-            isLoading={cash.isLoading}
-          />
-        </section>
-        <div className={styles.actions}>
-          <button
-            className={styles.actionButton}
-            type="button"
-            disabled={!cash.session.isOpen || cash.categories.length === 0}
-            title={
-              !cash.session.isOpen
-                ? "Abrí la caja para registrar movimientos"
-                : cash.categories.length === 0
-                  ? "Creá una categoría para registrar movimientos"
-                  : undefined
-            }
-            onClick={() => setDialog("movement")}
-          >
-            + Registrar movimiento
-          </button>
-          <button
-            className={styles.actionButton}
-            type="button"
-            disabled={cash.isLoading}
-            onClick={() => setDialog("category")}
-          >
-            + Añadir nueva categoría
-          </button>
-          <Link className={styles.actionButton} to="/cash-register/history">
-            Ver historial
-          </Link>
-        </div>
+      <section className={styles.summary} aria-label="Resumen de caja">
+        <CashSummaryCard
+          label="Resumen de caja:"
+          amount={hasRegister ? cash.summary.balance : null}
+          isLoading={cash.isLoading}
+        />
+        <CashSummaryCard
+          label="Ingresos totales:"
+          amount={hasRegister ? cash.summary.income : null}
+          isLoading={cash.isLoading}
+        />
+        <CashSummaryCard
+          label="Egresos totales:"
+          amount={hasRegister ? cash.summary.expenses : null}
+          isLoading={cash.isLoading}
+        />
+      </section>
+
+      <div className={styles.actions}>
+        <button
+          className={styles.actionButton}
+          type="button"
+          disabled={!cash.session.isOpen || cash.categories.length === 0}
+          title={
+            !cash.session.isOpen
+              ? "Abrí la caja para registrar movimientos"
+              : cash.categories.length === 0
+                ? "Creá una categoría para registrar movimientos"
+                : undefined
+          }
+          onClick={() => setDialog("movement")}
+        >
+          + Registrar movimiento
+        </button>
+        <button
+          className={styles.actionButton}
+          type="button"
+          disabled={cash.isLoading}
+          onClick={() => setDialog("category")}
+        >
+          + Añadir nueva categoría
+        </button>
+        <Link className={styles.actionButton} to="/cash-register/history">
+          Historial Mensual
+        </Link>
+        <Link className={styles.actionButton} to="/cash-register/history">
+          Historial Diario
+        </Link>
       </div>
 
       <section className={styles.recentSection}>
         <h3>Últimos movimientos</h3>
         <div className={styles.filters}>
-          <SearchBar value={search} onChange={setSearch} placeholder="Buscar categoría o motivo" />
+          <div className={styles.searchBox}>
+            <SearchBar
+              value={search}
+              onChange={setSearch}
+              placeholder="Buscar categoría o motivo"
+            />
+          </div>
           <label className={styles.typeFilter}>
             <span className={styles.visuallyHidden}>Filtrar por tipo</span>
             <select
               value={typeFilter === "all" ? "all" : String(typeFilter)}
               onChange={(event) =>
-                setTypeFilter(event.target.value === "all" ? "all" : (Number(event.target.value) as MovementType))
+                setTypeFilter(
+                  event.target.value === "all" ? "all" : (Number(event.target.value) as MovementType),
+                )
               }
             >
               {MOVEMENT_TYPE_FILTERS.map((option) => (
-                <option key={option.value} value={String(option.value)}>{option.label}</option>
+                <option key={option.value} value={String(option.value)}>
+                  {option.label}
+                </option>
               ))}
             </select>
           </label>
@@ -165,13 +192,6 @@ function CashRegister() {
             }
           />
         </div>
-        {cash.session.isOpen && (
-          <div className={styles.closeRow}>
-            <button className={styles.closeButton} type="button" onClick={() => setDialog("close")}>
-              Cerrar caja
-            </button>
-          </div>
-        )}
       </section>
 
       {dialog === "movement" && (
