@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import Dashboard from "@/pages/Dashboard"; //Re-reoutear cuando se haga la pagina de dashboard!!
+import { ProtectedRoute } from "@/app/routes/ProtectedRoute";
+import LoginPage from "@/features/auth/pages/LoginPage";
 
 import StudentRoutes from "@/features/students/routes/StudentRoutes";
 import CrewRoutes from "@/features/crews/routes/CrewRoutes";
@@ -11,14 +13,18 @@ import CashRegisterRoutes from "@/features/cashRegister/routes/cashRegisterRoute
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
+      <Route path="/login" element={<LoginPage />} />
 
-        <Route path="students/*" element={<StudentRoutes />} /> 
-        <Route path="crews/*" element={<CrewRoutes />} /> 
-        <Route path="registrations/*" element={<RegistrationRoutes />} />
-        <Route path="payments/*" element={<PaymentRoutes />} />
-        <Route path="cash-register/*" element={<CashRegisterRoutes />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+
+          <Route path="students/*" element={<StudentRoutes />} />
+          <Route path="crews/*" element={<CrewRoutes />} />
+          <Route path="registrations/*" element={<RegistrationRoutes />} />
+          <Route path="payments/*" element={<PaymentRoutes />} />
+          <Route path="cash-register/*" element={<CashRegisterRoutes />} />
+        </Route>
       </Route>
     </Routes>
   );
