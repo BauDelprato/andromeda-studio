@@ -1,10 +1,14 @@
 using Andromeda.Api.DTOs.Auth;
 using Andromeda.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Andromeda.Api.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
+    [EnableRateLimiting("auth")]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {

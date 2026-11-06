@@ -22,7 +22,10 @@ namespace Andromeda.Api.Services
 
         public async Task<AuthResponse?> AuthenticateGoogleAsync(GoogleLoginRequest request)
         {
-            // 1. Validar el Token con los servidores de Google
+            if (string.IsNullOrWhiteSpace(request.IdToken))
+                return null;
+
+            // 1. Validar el ID token con los servidores de Google.
             var googleClientId = _config["GoogleAuth:ClientId"]
                 ?? throw new InvalidOperationException("Falta configurar 'GoogleAuth:ClientId'.");
 
@@ -37,48 +40,61 @@ namespace Andromeda.Api.Services
             }
             catch
             {
-                // El token no es válido o expiro
                 return null;
             }
 
-            // 2. Validar que el Email pertenezca a un estudiante/usuario de la base de datos (Whitelist)
-            var student = await _context.Students
-                .FirstOrDefaultAsync(s => s.Email.ToLower() == payload.Email.ToLower() && s.IsActive);
+            if (!payload.EmailVerified || string.IsNullOrWhiteSpace(payload.Email))
+                return null;
 
-            if (student == null)
+            var email = payload.Email.Trim();
+
+           
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.IsActive && u.Email.ToLower() == email.ToLower());
+
+            if (user == null)
             {
-                // El usuario se autenticó en Google, pero NO está registrado en el sistema
                 return null;
             }
 
-            // 3. Generar el JWT interno para Andromeda
-            var token = GenerateJwtToken(student.Email, student.Id);
 
             return new AuthResponse
             {
-                Token = token,
-                Email = student.Email,
-                FirstName = student.FirstName,
-                LastName = student.LastName
+                Token = GenerateJwtToken(user.Id, user.Email, user.Role),
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Role = user.Role
             };
         }
 
-        private string GenerateJwtToken(string email, int studentId)
+        private string GenerateJwtToken(int userId, string email, string role)
         {
-            var secretKey = _config["JwtSettings:SecretKey"] 
-                ?? throw new InvalidOperationException("Falta configurar 'JwtSettings:SecretKey'.");            
+            var secretKey = _config["JwtSettings:SecretKey"]
+                ?? throw new InvalidOperationException("Falta configurar 'JwtSettings:SecretKey'.");
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            var expirationHours =
+                int.TryParse(_config["JwtSettings:ExpirationHours"], out var hours) && hours > 0
+                    ? hours
+                    : 8;
+
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, studentId.ToString()),
-                new Claim(ClaimTypes.Email, email)
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.Role, role),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var token = new JwtSecurityToken(
+                issuer: _config["JwtSettings:Issuer"],
+                audience: _config["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(7), // El token dura 7 días
+                expires: DateTime.UtcNow.AddHours(expirationHours),
                 signingCredentials: creds
             );
 

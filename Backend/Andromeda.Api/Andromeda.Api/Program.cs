@@ -1,7 +1,9 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using Andromeda.Api.Data;
 using Andromeda.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -25,6 +27,8 @@ builder.Services.AddControllers();
 
 var jwtSecretKey = builder.Configuration["JwtSettings:SecretKey"] 
     ?? throw new InvalidOperationException("Falta configurar 'JwtSettings:SecretKey' en los secretos.");
+var jwtIssuer = builder.Configuration["JwtSettings:Issuer"];
+var jwtAudience = builder.Configuration["JwtSettings:Audience"];
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -33,10 +37,37 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
-            ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateIssuer = !string.IsNullOrWhiteSpace(jwtIssuer),
+            ValidIssuer = jwtIssuer,
+            ValidateAudience = !string.IsNullOrWhiteSpace(jwtAudience),
+            ValidAudience = jwtAudience,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(1)
         };
     });
+
+builder.Services.AddAuthorization(options =>
+{
+    // Todo endpoint sin [AllowAnonymous] exige un JWT válido emitido por Andromeda.
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
+// Límite para /api/auth/google: evita que se use como amplificador de fuerza bruta/DoS.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("auth", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
@@ -64,7 +95,7 @@ builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<CashRegisterService>();
 
 builder.Services.AddScoped<AutomaticChargeGenerationService>();
-//builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddOpenApi();
 
@@ -72,13 +103,15 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapOpenApi().AllowAnonymous();
+    app.MapScalarApiReference().AllowAnonymous();
 }
 
 app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
