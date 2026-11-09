@@ -174,24 +174,28 @@ namespace Andromeda.Api.Services
             await _context.SaveChangesAsync();
         }
 
-        private async Task GenerateMissingCrewChargesAsync(
-            Price price)
+        private async Task GenerateMissingCrewChargesAsync(Price price)
         {
             var crewLevel = price.CrewLevel!.Value;
 
-            var startDate = price.ValidFrom.ToDateTime(
-                TimeOnly.MinValue, DateTimeKind.Utc);
+            var billingPeriod = new DateOnly(
+                price.ValidFrom.Year,
+                price.ValidFrom.Month,
+                1);
+
+            var nextBillingPeriodStart = billingPeriod.AddMonths(1).ToDateTime(
+                TimeOnly.MinValue,
+                DateTimeKind.Utc);
 
             DateTime? endDate = price.ValidTo?.ToDateTime(
-                TimeOnly.MinValue, DateTimeKind.Utc);
+                TimeOnly.MinValue,
+                DateTimeKind.Utc);
 
             var studentCrews = await _context.StudentCrew
-                .Include(sc => sc.Crew)
                 .Where(sc =>
                     sc.Crew.Level == crewLevel &&
-                    sc.CreatedAt >= startDate &&
-                    (!endDate.HasValue ||
-                     sc.CreatedAt < endDate.Value))
+                    sc.CreatedAt < nextBillingPeriodStart &&
+                    (!endDate.HasValue || sc.CreatedAt < endDate.Value))
                 .ToListAsync();
 
             if (studentCrews.Count == 0)
@@ -206,32 +210,17 @@ namespace Andromeda.Api.Services
                     c.Type == ChargeType.Crew &&
                     c.StudentCrewId.HasValue &&
                     studentCrewIds.Contains(c.StudentCrewId.Value) &&
-                    c.BillingPeriod.HasValue)
-                .Select(c => new
-                {
-                    StudentCrewId = c.StudentCrewId!.Value,
-                    BillingPeriod = c.BillingPeriod!.Value
-                })
+                    c.BillingPeriod == billingPeriod)
+                .Select(c => c.StudentCrewId!.Value)
                 .ToListAsync();
 
-            var existingKeys = existingCharges
-                .Select(c => (c.StudentCrewId, c.BillingPeriod))
-                .ToHashSet();
+            var existingStudentCrewIds = existingCharges.ToHashSet();
 
             var charges = new List<Charge>();
 
             foreach (var studentCrew in studentCrews)
             {
-                var enrollmentDate =
-                    DateOnly.FromDateTime(studentCrew.CreatedAt);
-
-                var billingPeriod = new DateOnly(
-                    enrollmentDate.Year,
-                    enrollmentDate.Month,
-                    1);
-
-                if (!existingKeys.Add(
-                    (studentCrew.Id, billingPeriod)))
+                if (!existingStudentCrewIds.Add(studentCrew.Id))
                     continue;
 
                 charges.Add(new Charge
